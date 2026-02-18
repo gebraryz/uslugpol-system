@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["core"]
+}
+
+enum LeadType {
+  EVENT
+  CAR
+  CLEANING
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONVERTED
+}
+
+enum LeadChannel {
+  PHONE
+  EMAIL
+  FORM
+}
+
+model Lead {
+  id          String     @id @default(uuid())
+  category    LeadType
+  status      LeadStatus
+
+  channel     LeadChannel
+  description String
+
+  lat         Float
+  lng         Float
+
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  extensions  LeadExtension[]
+  opportunities CrossSellOpportunity[]
+
+  @@index([category, status])
+  @@map("leads")
+  @@schema("core")
+}
+
+model LeadExtension {
+  id        String   @id @default(uuid())
+  leadId    String   @map("lead_id")
+  namespace String   // np. "event_service"
+  data      Json     // np. { "guestCount": 120, "budget": 50000 }
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lead      Lead     @relation(fields: [leadId], references: [id])
+
+  @@unique([leadId, namespace])
+  @@index([namespace])
+  @@map("lead_extensions")
+  @@schema("core")
+}
+
+enum CrossSellOpportunityStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum CrossSellSource {
+  RULE_ENGINE
+  SERVICE_REPORT
+}
+
+model CrossSellOpportunity {
+  id               String   @id @default(uuid())
+  leadId           String   @map("lead_id")
+
+  targetService    LeadType
+  status           CrossSellOpportunityStatus @default(PENDING)
+
+  source           CrossSellSource
+  reason           String
+  ruleKey          String?  @map("rule_key")
+  context          Json?    
+
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  lead             Lead     @relation(fields: [leadId], references: [id])
+
+  @@index([leadId, status])
+  @@index([targetService, status])
+  @@map("cross_sell_opportunities")
+  @@schema("core")
+}

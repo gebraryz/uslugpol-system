@@ -1,1 +1,1 @@
-# uslugpol-system-recruitment-task
+# UsługPOL
