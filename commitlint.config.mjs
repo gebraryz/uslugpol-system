@@ -4,7 +4,15 @@ export default {
     "scope-enum": [
       2,
       "always",
-      ["core", "event-service", "car-service", "db", "docs", "shared"],
+      [
+        "core",
+        "event-service",
+        "car-service",
+        "db",
+        "docs",
+        "shared",
+        "config",
+      ],
     ],
   },
 };

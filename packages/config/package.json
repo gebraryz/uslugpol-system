@@ -1,12 +1,17 @@
 {
-  "name": "@uslugpol/eslint-config",
+  "name": "@uslugpol/config",
   "version": "0.0.0",
   "type": "module",
   "private": true,
   "exports": {
-    "./base": "./base.js",
-    "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
+    "./eslint": "./eslint/index.js",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next-js": "./eslint/next.js",
+    "./eslint/react-internal": "./eslint/react-internal.js",
+    "./typescript": "./typescript/base.json",
+    "./typescript/base.json": "./typescript/base.json",
+    "./typescript/nextjs.json": "./typescript/nextjs.json",
+    "./typescript/react-library.json": "./typescript/react-library.json"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

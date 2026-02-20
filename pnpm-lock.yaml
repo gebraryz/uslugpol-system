@@ -96,12 +96,9 @@ importers:
       '@types/react-dom':
         specifier: 19.2.2
         version: 19.2.2(@types/react@19.2.2)
-      '@uslugpol/eslint-config':
+      '@uslugpol/config':
         specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@uslugpol/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
+        version: link:../../packages/config
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -136,42 +133,14 @@ importers:
       '@types/pg':
         specifier: ^8.16.0
         version: 8.16.0
-      '@uslugpol/eslint-config':
+      '@uslugpol/config':
         specifier: workspace:*
-        version: link:../eslint-config
+        version: link:../config
       prisma:
         specifier: ^7.4.0
         version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
 
-  packages/core:
-    dependencies:
-      '@prisma/adapter-pg':
-        specifier: ^7.4.0
-        version: 7.4.0
-      '@prisma/client':
-        specifier: ^7.4.0
-        version: 7.4.0(prisma@7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2))(typescript@5.9.2)
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
-      pg:
-        specifier: ^8.18.0
-        version: 8.18.0
-    devDependencies:
-      '@types/node':
-        specifier: ^22.15.3
-        version: 22.15.3
-      '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
-      '@uslugpol/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      prisma:
-        specifier: ^7.4.0
-        version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
-
-  packages/eslint-config:
+  packages/config:
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.1
@@ -207,6 +176,34 @@ importers:
         specifier: ^8.50.0
         version: 8.50.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.2)
 
+  packages/core:
+    dependencies:
+      '@prisma/adapter-pg':
+        specifier: ^7.4.0
+        version: 7.4.0
+      '@prisma/client':
+        specifier: ^7.4.0
+        version: 7.4.0(prisma@7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2))(typescript@5.9.2)
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
+      pg:
+        specifier: ^8.18.0
+        version: 8.18.0
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
+      '@uslugpol/config':
+        specifier: workspace:*
+        version: link:../config
+      prisma:
+        specifier: ^7.4.0
+        version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
+
   packages/event-service:
     dependencies:
       '@prisma/adapter-pg':
@@ -228,14 +225,12 @@ importers:
       '@types/pg':
         specifier: ^8.16.0
         version: 8.16.0
-      '@uslugpol/eslint-config':
+      '@uslugpol/config':
         specifier: workspace:*
-        version: link:../eslint-config
+        version: link:../config
       prisma:
         specifier: ^7.4.0
         version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
-
-  packages/typescript-config: {}
 
 packages:
 
@@ -3113,6 +3108,7 @@ packages:
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
@@ -3656,6 +3652,7 @@ packages:
 
   resolve@2.0.0-next.5:
     resolution: {integrity: sha512-U7WjGVG9sH8tvjW5SmGbQuui75FiyjAX72HX15DwBBwF9dNiQZRQAg9nnPhYy+TUnE0+VcrttuvNI8oSxZcocA==}
+    hasBin: true
 
   restore-cursor@5.1.0:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
