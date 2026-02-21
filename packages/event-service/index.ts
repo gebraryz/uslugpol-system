@@ -5,3 +5,4 @@ export {
   LeadChannel,
   CrossSellTargetService,
 } from "./generated/prisma/client";
+export type { Prisma } from "./generated/prisma/client";

@@ -21,11 +21,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   LEAD_CATEGORIES_LABELS,
-  LeadCategory,
+  type LeadCategory,
 } from "@/constants/lead/lead-categories";
 import {
   LEAD_CHANNELS_LABELS,
-  LeadChannel,
+  type LeadChannel,
 } from "@/constants/lead/lead-channels";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
@@ -49,17 +49,12 @@ export const CreateCoreLeadDialog = () => {
         router.refresh();
         setIsDialogOpen(false);
 
-        if (typeof data?.dispatchedToModule === "undefined") {
-          toast.success("Lead został utworzony");
-          return;
-        }
-
-        if (data.dispatchedToModule) {
-          toast.success("Lead został utworzony");
-        } else {
+        if (data?.dispatchedToModule === false) {
           toast.warning(
             "Lead został utworzony, ale nie został przekazany do modułu docelowego",
           );
+        } else {
+          toast.success("Lead został utworzony");
         }
       },
       onError: ({ error }) => {

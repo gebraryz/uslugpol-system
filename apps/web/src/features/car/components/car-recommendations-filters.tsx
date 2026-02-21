@@ -44,6 +44,7 @@ export const CarRecommendationsFilters = () => (
       queryKey="id"
       label="ID leada/opcji"
       placeholder="np. 81763ada..."
+      resetKeys={["ruleKey", "status", "reviewState"]}
     />
     <QuerySelects items={FILTER_ITEMS} />
   </div>

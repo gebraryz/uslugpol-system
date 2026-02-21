@@ -28,9 +28,9 @@ const queryStateParser = parseAsString.withOptions({
 
 export const QuerySelect = ({ queryKey, label, options }: QuerySelectProps) => {
   const allowedValues = options.map((option) => option.value);
-  const optionLabels = Object.fromEntries(
+  const optionLabels = new Map(
     options.map((option) => [option.value, option.label]),
-  ) as Record<string, string>;
+  );
 
   const [value, setValue] = useQueryState(queryKey, queryStateParser);
   const [, setPage] = useQueryState(
@@ -42,7 +42,7 @@ export const QuerySelect = ({ queryKey, label, options }: QuerySelectProps) => {
   const currentLabel =
     currentValue === ALL_OPTIONS
       ? ALL_OPTIONS_LABEL
-      : optionLabels[currentValue] ?? ALL_OPTIONS_LABEL;
+      : optionLabels.get(currentValue) ?? ALL_OPTIONS_LABEL;
 
   const onValueChange = (nextValue: string) => {
     const parsedValue = nextValue === ALL_OPTIONS ? null : nextValue;

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
@@ -66,13 +66,9 @@ export const CoreLeadDetailsStatusControl = ({
   }, [allowedNextStatus, form, leadId, status]);
 
   const selectedStatus = form.watch("status");
-
-  const placeholder = useMemo(() => {
-    if (!allowedNextStatus) {
-      return "Lead zakończony";
-    }
-    return `Następny: ${LEAD_STATUS_LABELS[allowedNextStatus]}`;
-  }, [allowedNextStatus]);
+  const placeholder = allowedNextStatus
+    ? `Następny: ${LEAD_STATUS_LABELS[allowedNextStatus]}`
+    : "Lead zakończony";
 
   return (
     <form
@@ -85,8 +81,8 @@ export const CoreLeadDetailsStatusControl = ({
         <Select
           disabled={isPending}
           value={selectedStatus}
-          onValueChange={(value) => {
-            form.setValue("status", value as LeadStatus, {
+          onValueChange={() => {
+            form.setValue("status", allowedNextStatus, {
               shouldDirty: true,
               shouldValidate: true,
             });

@@ -34,6 +34,7 @@ export const EventLeadsTableFilters = () => (
       queryKey="id"
       label="ID leada"
       placeholder="np. 81763ada..."
+      resetKeys={["channel", "moduleStatus"]}
     />
     <QuerySelects items={FILTER_ITEMS} />
   </div>

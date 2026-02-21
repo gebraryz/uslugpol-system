@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import {
   formatDate,
-  formatJson,
   statusBadgeVariant,
   toCrossSellRuleLabel,
   toCrossSellStatusLabel,
@@ -63,7 +62,6 @@ export const CoreLeadDetailsCrossSellCard = ({
                 <TableHead>Reguła</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Utworzono</TableHead>
-                <TableHead>Szczegóły</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,20 +82,6 @@ export const CoreLeadDetailsCrossSellCard = ({
                     </Badge>
                   </TableCell>
                   <TableCell>{formatDate(opportunity.createdAt)}</TableCell>
-                  <TableCell>
-                    {opportunity.context ? (
-                      <details className="text-sm">
-                        <summary className="cursor-pointer">
-                          Pokaż szczegóły
-                        </summary>
-                        <pre className="bg-muted mt-2 max-w-md overflow-x-auto rounded-md p-2 text-xs">
-                          {formatJson(opportunity.context)}
-                        </pre>
-                      </details>
-                    ) : (
-                      "Brak"
-                    )}
-                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -88,7 +88,7 @@ export const createCoreLeadAction = actionClient
       location: { lat: lead.lat, lng: lead.lng },
       createdAt: lead.createdAt.toISOString(),
       updatedAt: lead.updatedAt.toISOString(),
-    } as const;
+    };
 
     try {
       await getEventBus().publish({

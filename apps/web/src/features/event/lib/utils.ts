@@ -8,10 +8,8 @@ interface EventEnrichmentDetails {
 export const isEventLeadEnriched = (
   details: EventEnrichmentDetails | null | undefined,
 ) =>
-  Boolean(
-    details &&
-    (details.eventDate !== null ||
-      details.guestCount !== null ||
-      details.budget !== null ||
-      details.isOutdoor !== null),
-  );
+  details != null &&
+  (details.eventDate !== null ||
+    details.guestCount !== null ||
+    details.budget !== null ||
+    details.isOutdoor !== null);

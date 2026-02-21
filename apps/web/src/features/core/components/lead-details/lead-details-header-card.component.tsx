@@ -12,7 +12,6 @@ import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 import {
   LEAD_STATUS_FLOW,
   LEAD_STATUS_LABELS,
-  type LeadStatus,
 } from "@/constants/lead/lead-status";
 import { cn, formatDate, isObjectRecord } from "@/lib/utils";
 import { IconArrowRight } from "@tabler/icons-react";
@@ -55,7 +54,7 @@ export const CoreLeadDetailsHeaderCard = ({
   lead,
   auditLog,
 }: CoreLeadDetailsHeaderCardProps) => {
-  const currentStatus = lead.status as LeadStatus;
+  const currentStatus = lead.status;
   const currentStatusIndex = LEAD_STATUS_FLOW.indexOf(currentStatus);
 
   const statusHistory = getStatusHistory(auditLog);

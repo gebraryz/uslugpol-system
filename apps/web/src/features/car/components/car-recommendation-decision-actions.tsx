@@ -5,11 +5,14 @@ import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { decideCarRecommendationAction } from "../actions/decide-recommendation";
-import type { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
+import {
+  CrossSellDecisionStatus,
+  type CrossSellDecisionStatus as CarCrossSellDecisionStatus,
+} from "@uslugpol/car-service/enums";
 
 interface CarRecommendationDecisionActionsProps {
   recommendationId: string;
-  status: CrossSellDecisionStatus;
+  status: CarCrossSellDecisionStatus;
 }
 
 export const CarRecommendationDecisionActions = ({
@@ -36,7 +39,7 @@ export const CarRecommendationDecisionActions = ({
     },
   });
 
-  if (status !== "PENDING") {
+  if (status !== CrossSellDecisionStatus.PENDING) {
     return <span className="text-muted-foreground text-sm">Rozpatrzono</span>;
   }
 
@@ -49,7 +52,7 @@ export const CarRecommendationDecisionActions = ({
         onClick={() =>
           execute({
             recommendationId,
-            decision: "ACCEPTED",
+            decision: CrossSellDecisionStatus.ACCEPTED,
           })
         }
       >
@@ -62,7 +65,7 @@ export const CarRecommendationDecisionActions = ({
         onClick={() =>
           execute({
             recommendationId,
-            decision: "DECLINED",
+            decision: CrossSellDecisionStatus.DECLINED,
           })
         }
       >

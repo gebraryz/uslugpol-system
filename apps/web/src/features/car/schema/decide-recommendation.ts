@@ -7,7 +7,7 @@ import z from "zod";
 const CAR_CROSS_SELL_DECISIONS = [
   CrossSellDecisionStatusEnum.ACCEPTED,
   CrossSellDecisionStatusEnum.DECLINED,
-] as [CrossSellDecisionStatus, CrossSellDecisionStatus];
+] as const satisfies readonly [CrossSellDecisionStatus, CrossSellDecisionStatus];
 
 export const decideCarRecommendationSchema = z.object({
   recommendationId: z.string().min(1, "Brak ID rekomendacji"),

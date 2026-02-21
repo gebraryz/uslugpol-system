@@ -3,6 +3,7 @@ import type { LeadChannel } from "@/constants/lead/lead-channels";
 import type { EventModuleStatus } from "../constants/event-module-status";
 import { PaginationParams } from "@/features/shared/filters/types/pagination";
 import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
+import type { Prisma as EventPrisma } from "@uslugpol/event-service";
 
 interface EventLeadsFilters {
   id?: string | null;
@@ -19,7 +20,7 @@ export const getEventLeads = async ({
 }: PaginationParams & EventLeadsFilters) => {
   const { event: db } = getDb();
 
-  const where = {
+  const where: EventPrisma.EventLeadInboxWhereInput = {
     ...(id ? { leadId: { contains: id } } : {}),
 
     ...(channel ? { channel } : {}),

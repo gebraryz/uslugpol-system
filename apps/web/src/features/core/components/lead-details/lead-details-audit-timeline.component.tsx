@@ -26,7 +26,6 @@ import { LEAD_CHANNELS_LABELS } from "@/constants/lead/lead-channels";
 import { LEAD_STATUS_LABELS } from "@/constants/lead/lead-status";
 import {
   formatDate,
-  formatJson,
   isObjectRecord,
   toCrossSellStatusLabel,
   toServiceLabel,
@@ -273,15 +272,6 @@ export const CoreLeadDetailsAuditTimeline = ({
                   {summary.subtitle} • Źródło:{" "}
                   {toServiceLabelOrUnknown(event.actorService)}
                 </p>
-
-                <details className="mt-2">
-                  <summary className="cursor-pointer text-sm">
-                    Pokaż szczegóły (JSON)
-                  </summary>
-                  <pre className="bg-muted mt-2 overflow-x-auto rounded-md p-3 text-xs">
-                    {formatJson(event.payload)}
-                  </pre>
-                </details>
               </li>
             );
           })}

@@ -4,6 +4,7 @@ import type { LeadChannel } from "@/constants/lead/lead-channels";
 import type { LeadStatus } from "@/constants/lead/lead-status";
 import { PaginationParams } from "@/features/shared/filters/types/pagination";
 import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
+import type { Prisma as CorePrisma } from "@uslugpol/core";
 
 interface CoreLeadsFilters {
   id?: string | null;
@@ -22,7 +23,7 @@ export const getLeads = async ({
 }: PaginationParams & CoreLeadsFilters) => {
   const { core: db } = getDb();
 
-  const where = {
+  const where: CorePrisma.LeadWhereInput = {
     ...(id ? { id: { contains: id } } : {}),
     ...(channel ? { channel } : {}),
     ...(category ? { category } : {}),

@@ -44,7 +44,7 @@ const toOutdoorSelectValue = (
   return "unknown";
 };
 
-const fromOutdoorSelectValue = (value: OutdoorSelectValue): boolean | null => {
+const fromOutdoorSelectValue = (value: string): boolean | null => {
   if (value === "true") return true;
   if (value === "false") return false;
 
@@ -52,7 +52,7 @@ const fromOutdoorSelectValue = (value: OutdoorSelectValue): boolean | null => {
 };
 
 const toDateInput = (date: Date | null) =>
-  date ? new Date(date).toISOString().slice(0, 10) : undefined;
+  date ? date.toISOString().slice(0, 10) : undefined;
 
 const toNullableInt = (value: string): number | null =>
   value.trim() === "" ? null : Number(value);
@@ -154,11 +154,9 @@ export const EventEnrichmentForm = ({
           <Select
             value={toOutdoorSelectValue(isOutdoor)}
             onValueChange={(value) => {
-              form.setValue(
-                "isOutdoor",
-                fromOutdoorSelectValue(value as OutdoorSelectValue),
-                { shouldDirty: true },
-              );
+              form.setValue("isOutdoor", fromOutdoorSelectValue(value), {
+                shouldDirty: true,
+              });
             }}
           >
             <SelectTrigger>

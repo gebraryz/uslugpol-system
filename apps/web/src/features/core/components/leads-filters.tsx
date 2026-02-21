@@ -37,6 +37,7 @@ export const CoreLeadsFilters = () => (
       queryKey="id"
       label="ID leada"
       placeholder="np. 81763ada..."
+      resetKeys={["channel", "category", "status"]}
     />
     <QuerySelects items={FILTER_ITEMS} />
   </div>

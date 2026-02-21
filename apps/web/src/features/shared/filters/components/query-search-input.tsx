@@ -4,13 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Search } from "lucide-react";
 import { debounce, parseAsString, useQueryStates } from "nuqs";
-import { useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { pageParser } from "../lib/search-params";
 
 interface QuerySearchInputProps {
   queryKey: string;
   label: string;
   placeholder?: string;
+  resetKeys?: string[];
 }
 
 const queryStateParser = parseAsString
@@ -21,23 +22,47 @@ export const QuerySearchInput = ({
   queryKey,
   label,
   placeholder = "Szukaj...",
+  resetKeys = [],
 }: QuerySearchInputProps) => {
   const [isPending, startTransition] = useTransition();
 
-  const [values, setValues] = useQueryStates(
-    { [queryKey]: queryStateParser, page: pageParser },
-    { history: "push", shallow: false },
+  const keysToReset = useMemo(
+    () => resetKeys.filter((key) => key !== queryKey && key !== "page"),
+    [queryKey, resetKeys],
   );
+
+  const parserConfig = useMemo(
+    () => ({
+      [queryKey]: queryStateParser,
+      page: pageParser,
+      ...Object.fromEntries(
+        keysToReset.map((key) => [
+          key,
+          parseAsString.withOptions({ shallow: false, history: "push" }),
+        ]),
+      ),
+    }),
+    [keysToReset, queryKey],
+  );
+
+  const [values, setValues] = useQueryStates(parserConfig, {
+    history: "push",
+    shallow: false,
+  });
 
   const value = values[queryKey] ?? "";
 
   const onChange = (nextValue: string) => {
     const updateOptions =
       nextValue === "" ? undefined : { limitUrlUpdates: debounce(300) };
+    const resetFilters = Object.fromEntries(
+      keysToReset.map((key) => [key, null]),
+    );
 
     startTransition(async () => {
       await setValues(
         {
+          ...resetFilters,
           [queryKey]: nextValue === "" ? null : nextValue,
           page: null,
         },

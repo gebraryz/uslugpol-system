@@ -8,6 +8,11 @@ import { ActionError, actionClient } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 import { decideCarRecommendationSchema } from "../schema/decide-recommendation";
+import { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
+import type { AppEventMap } from "@uslugpol/shared/event-bus";
+
+const CAR_TARGET_SERVICE =
+  "car_service" as const satisfies AppEventMap["service.cross_sell.decision.v1"]["targetService"];
 
 export const decideCarRecommendationAction = actionClient
   .inputSchema(decideCarRecommendationSchema)
@@ -28,7 +33,7 @@ export const decideCarRecommendationAction = actionClient
       throw new ActionError("Rekomendacja nie istnieje", 404);
     }
 
-    if (recommendation.status !== "PENDING") {
+    if (recommendation.status !== CrossSellDecisionStatus.PENDING) {
       return {
         recommendationId: recommendation.id,
         sentToCore: false,
@@ -58,7 +63,7 @@ export const decideCarRecommendationAction = actionClient
           correlationId,
           payload: {
             opportunityId: recommendation.opportunityId,
-            targetService: "car_service",
+            targetService: CAR_TARGET_SERVICE,
             decision: parsedInput.decision,
             decidedAt,
             correlationId,

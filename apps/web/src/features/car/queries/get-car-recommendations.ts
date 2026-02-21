@@ -3,6 +3,8 @@ import type { CrossSellRuleKey, CrossSellStatus } from "@/constants/cross-sell";
 import { PaginationParams } from "@/features/shared/filters/types/pagination";
 import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
 import type { CarRecommendationReviewState } from "../constants/recommendation-review-state";
+import type { Prisma as CarPrisma } from "@uslugpol/car-service";
+import { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
 
 interface CarRecommendationsFilters {
   id?: string | null;
@@ -11,7 +13,10 @@ interface CarRecommendationsFilters {
   reviewState?: CarRecommendationReviewState | null;
 }
 
-const REVIEWED_STATUSES: CrossSellStatus[] = ["ACCEPTED", "DECLINED"];
+const REVIEWED_STATUSES: CrossSellStatus[] = [
+  CrossSellDecisionStatus.ACCEPTED,
+  CrossSellDecisionStatus.DECLINED,
+];
 
 export const getCarRecommendations = async ({
   page,
@@ -23,14 +28,18 @@ export const getCarRecommendations = async ({
 }: PaginationParams & CarRecommendationsFilters) => {
   const { car: db } = getDb();
 
-  if (reviewState === "UNREVIEWED" && status && status !== "PENDING") {
+  if (
+    reviewState === "UNREVIEWED" &&
+    status &&
+    status !== CrossSellDecisionStatus.PENDING
+  ) {
     return {
       recommendations: [],
       ...toPaginationMeta({ page, pageSize, totalItems: 0 }),
     };
   }
 
-  if (reviewState === "REVIEWED" && status === "PENDING") {
+  if (reviewState === "REVIEWED" && status === CrossSellDecisionStatus.PENDING) {
     return {
       recommendations: [],
       ...toPaginationMeta({ page, pageSize, totalItems: 0 }),
@@ -39,12 +48,12 @@ export const getCarRecommendations = async ({
 
   const statusFilter =
     reviewState === "UNREVIEWED"
-      ? "PENDING"
+      ? CrossSellDecisionStatus.PENDING
       : reviewState === "REVIEWED"
         ? status ?? { in: REVIEWED_STATUSES }
         : status;
 
-  const where = {
+  const where: CarPrisma.CrossSellInboxWhereInput = {
     ...(ruleKey ? { ruleKey } : {}),
     ...(statusFilter ? { status: statusFilter } : {}),
     ...(id

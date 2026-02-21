@@ -14,4 +14,4 @@ export const toPaginationMeta = ({
 export const toQueryOptionsStructure = (
   values: readonly string[],
   labels: Record<string, string>,
-) => values.map((value) => ({ value, label: labels[value] || value }));
+) => values.map((value) => ({ value, label: labels[value] ?? value }));
