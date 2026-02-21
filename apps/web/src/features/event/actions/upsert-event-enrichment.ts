@@ -5,12 +5,12 @@ import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
 import { ROUTES } from "@/constants/routes";
 import { getDb } from "@/lib/db";
 import { getEventBus } from "@/lib/event-bus";
-import { ActionError, actionClient } from "@/lib/safe-action";
+import { ActionError, actionClientWithAccess } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 import { upsertEventEnrichmentSchema } from "../schema/upsert-event-enrichment";
 
-export const upsertEventEnrichmentAction = actionClient
+export const upsertEventEnrichmentAction = actionClientWithAccess(["event"])
   .inputSchema(upsertEventEnrichmentSchema)
   .action(async ({ parsedInput }) => {
     const { event: db } = getDb();
@@ -29,6 +29,7 @@ export const upsertEventEnrichmentAction = actionClient
     const guestCount = parsedInput.guestCount ?? null;
     const budget = parsedInput.budget ?? null;
     const isOutdoor = parsedInput.isOutdoor ?? null;
+
     const correlationId = crypto.randomUUID();
     const enrichedAt = new Date().toISOString();
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { ActionError, actionClient } from "@/lib/safe-action";
+import { ActionError, actionClientWithAccess } from "@/lib/safe-action";
 import { getDb } from "@/lib/db";
 import { updateLeadStatusSchema } from "../schema/update-lead-status";
 import { revalidatePath } from "next/cache";
@@ -10,7 +10,7 @@ import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 import { getEventBus } from "@/lib/event-bus";
 import crypto from "node:crypto";
 
-export const updateCoreLeadStatusAction = actionClient
+export const updateCoreLeadStatusAction = actionClientWithAccess(["core"])
   .inputSchema(updateLeadStatusSchema)
   .action(async ({ parsedInput }) => {
     const { core: db } = getDb();

@@ -6,8 +6,11 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { ROUTES } from "@/constants/routes";
+import { requireAccessContext } from "@/lib/access-context";
 
-const CleaningPage = () => {
+const CleaningPage = async () => {
+  await requireAccessContext(["cleaning"]);
+
   return (
     <AppPage
       title="Sprzątanie"

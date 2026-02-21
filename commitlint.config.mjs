@@ -5,6 +5,7 @@ export default {
       2,
       "always",
       [
+        "web",
         "core",
         "event-service",
         "car-service",

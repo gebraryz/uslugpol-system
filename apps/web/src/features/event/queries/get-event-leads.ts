@@ -4,6 +4,7 @@ import type { EventModuleStatus } from "../constants/event-module-status";
 import { PaginationParams } from "@/features/shared/filters/types/pagination";
 import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
 import type { Prisma as EventPrisma } from "@uslugpol/event-service";
+import { requireAccessContext } from "@/lib/access-context";
 
 interface EventLeadsFilters {
   id?: string | null;
@@ -18,6 +19,8 @@ export const getEventLeads = async ({
   channel,
   moduleStatus,
 }: PaginationParams & EventLeadsFilters) => {
+  await requireAccessContext(["event"]);
+
   const { event: db } = getDb();
 
   const where: EventPrisma.EventLeadInboxWhereInput = {

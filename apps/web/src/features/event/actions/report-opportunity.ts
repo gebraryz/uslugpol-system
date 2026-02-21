@@ -4,7 +4,7 @@ import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 import { ROUTES } from "@/constants/routes";
 import { getDb } from "@/lib/db";
 import { getEventBus } from "@/lib/event-bus";
-import { ActionError, actionClient } from "@/lib/safe-action";
+import { ActionError, actionClientWithAccess } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 import { reportOpportunitySchema } from "../schema/report-opportunity";
@@ -19,7 +19,7 @@ const TARGET_SERVICE_TO_CORE = {
   AppEventMap["event.opportunity.reported.v1"]["targetService"]
 >;
 
-export const reportOpportunityAction = actionClient
+export const reportOpportunityAction = actionClientWithAccess(["event"])
   .inputSchema(reportOpportunitySchema)
   .action(async ({ parsedInput }) => {
     const { event: db } = getDb();

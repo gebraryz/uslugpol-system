@@ -2,6 +2,7 @@ import { AppPage } from "@/components/app-page";
 import { ROUTES } from "@/constants/routes";
 import { EventLeadDetails } from "@/features/event/components/event-lead-details";
 import { getEventLeadDetails } from "@/features/event/queries/get-event-lead-details";
+import { requireAccessContext } from "@/lib/access-context";
 import { formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -11,6 +12,8 @@ interface EventLeadDetailsPageProps {
 }
 
 const getData = async (leadId: string) => {
+  await requireAccessContext(["event"]);
+
   const data = await getEventLeadDetails(leadId);
 
   if (!data) {

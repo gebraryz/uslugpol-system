@@ -2,6 +2,7 @@ import { AppPage } from "@/components/app-page";
 import { ROUTES } from "@/constants/routes";
 import { CoreLeadDetails } from "@/features/core/components/lead-details";
 import { getLeadDetails } from "@/features/core/queries/get-lead-details";
+import { requireAccessContext } from "@/lib/access-context";
 import { formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -11,6 +12,8 @@ interface LeadDetailsPageProps {
 }
 
 const getData = async (leadId: string) => {
+  await requireAccessContext(["core"]);
+
   const data = await getLeadDetails(leadId);
 
   if (!data) {

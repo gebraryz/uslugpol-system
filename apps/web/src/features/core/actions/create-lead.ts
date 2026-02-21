@@ -1,6 +1,6 @@
 "use server";
 
-import { actionClient } from "@/lib/safe-action";
+import { actionClientWithAccess } from "@/lib/safe-action";
 import { createLeadSchema } from "../schema/create-lead";
 import { getDb } from "@/lib/db";
 import { getEventBus } from "@/lib/event-bus";
@@ -9,7 +9,7 @@ import crypto from "node:crypto";
 import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
 
-export const createCoreLeadAction = actionClient
+export const createCoreLeadAction = actionClientWithAccess(["core"])
   .inputSchema(createLeadSchema)
   .action(async ({ parsedInput }) => {
     const { core: db } = getDb();

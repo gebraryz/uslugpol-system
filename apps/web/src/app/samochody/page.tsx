@@ -6,6 +6,7 @@ import { CarRecommendationsTable } from "@/features/car/components/car-recommend
 import { getCarRecommendations } from "@/features/car/queries/get-car-recommendations";
 import { loadCarRecommendationsFiltersSearchParams } from "@/features/car/lib/search-params";
 import { FILTERS_DEFAULT_PAGE_SIZE } from "@/features/shared/filters/constants/pagination";
+import { requireAccessContext } from "@/lib/access-context";
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
@@ -40,6 +41,8 @@ const CarRecommendationsData = async ({
 };
 
 const VehicleRentalPage = async ({ searchParams }: VehicleRentalPageProps) => {
+  await requireAccessContext(["car"]);
+
   return (
     <AppPage
       title="Wynajem aut"

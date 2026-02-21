@@ -5,6 +5,7 @@ import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
 import type { CarRecommendationReviewState } from "../constants/recommendation-review-state";
 import type { Prisma as CarPrisma } from "@uslugpol/car-service";
 import { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
+import { requireAccessContext } from "@/lib/access-context";
 
 interface CarRecommendationsFilters {
   id?: string | null;
@@ -26,6 +27,8 @@ export const getCarRecommendations = async ({
   status,
   reviewState,
 }: PaginationParams & CarRecommendationsFilters) => {
+  await requireAccessContext(["car"]);
+
   const { car: db } = getDb();
 
   if (
@@ -39,7 +42,10 @@ export const getCarRecommendations = async ({
     };
   }
 
-  if (reviewState === "REVIEWED" && status === CrossSellDecisionStatus.PENDING) {
+  if (
+    reviewState === "REVIEWED" &&
+    status === CrossSellDecisionStatus.PENDING
+  ) {
     return {
       recommendations: [],
       ...toPaginationMeta({ page, pageSize, totalItems: 0 }),
@@ -50,7 +56,7 @@ export const getCarRecommendations = async ({
     reviewState === "UNREVIEWED"
       ? CrossSellDecisionStatus.PENDING
       : reviewState === "REVIEWED"
-        ? status ?? { in: REVIEWED_STATUSES }
+        ? (status ?? { in: REVIEWED_STATUSES })
         : status;
 
   const where: CarPrisma.CrossSellInboxWhereInput = {

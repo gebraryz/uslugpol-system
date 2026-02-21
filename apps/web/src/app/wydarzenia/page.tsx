@@ -6,6 +6,7 @@ import { EventLeadsTableFilters } from "@/features/event/components/event-leads-
 import { getEventLeads } from "@/features/event/queries/get-event-leads";
 import { loadEventLeadsFiltersSearchParams } from "@/features/event/lib/search-params";
 import { FILTERS_DEFAULT_PAGE_SIZE } from "@/features/shared/filters/constants/pagination";
+import { requireAccessContext } from "@/lib/access-context";
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
@@ -33,6 +34,8 @@ const EventLeadsData = async ({
 };
 
 const EventLeadsPage = async ({ searchParams }: EventLeadsPageProps) => {
+  await requireAccessContext(["event"]);
+
   return (
     <AppPage
       title="Organizacja imprez"

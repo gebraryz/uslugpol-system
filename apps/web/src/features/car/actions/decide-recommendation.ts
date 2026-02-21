@@ -4,7 +4,7 @@ import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 import { ROUTES } from "@/constants/routes";
 import { getDb } from "@/lib/db";
 import { getEventBus } from "@/lib/event-bus";
-import { ActionError, actionClient } from "@/lib/safe-action";
+import { ActionError, actionClientWithAccess } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 import { decideCarRecommendationSchema } from "../schema/decide-recommendation";
@@ -14,7 +14,7 @@ import type { AppEventMap } from "@uslugpol/shared/event-bus";
 const CAR_TARGET_SERVICE =
   "car_service" as const satisfies AppEventMap["service.cross_sell.decision.v1"]["targetService"];
 
-export const decideCarRecommendationAction = actionClient
+export const decideCarRecommendationAction = actionClientWithAccess(["car"])
   .inputSchema(decideCarRecommendationSchema)
   .action(async ({ parsedInput }) => {
     const { car: db } = getDb();

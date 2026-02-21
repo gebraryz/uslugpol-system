@@ -1,3 +1,4 @@
+import { AccessContext } from "@/constants/access-context";
 import {
   CROSS_SELL_RULE_LABELS,
   CROSS_SELL_STATUS_LABELS,
@@ -41,6 +42,10 @@ export const statusBadgeVariant = (status: CrossSellStatus) => {
 
   return "secondary";
 };
+
+export const isNonCoreAccessContext = (
+  context: AccessContext,
+): context is Exclude<AccessContext, "core"> => context !== "core";
 
 export const toServiceLabel = (value: unknown): string | null =>
   typeof value === "string" && value in SERVICE_LABELS

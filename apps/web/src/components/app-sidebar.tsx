@@ -23,32 +23,39 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { AccessContextSwitcher } from "@/components/access-context-switcher";
+import type { AccessContext } from "@/constants/access-context";
 
 const NAVIGATION_ITEMS = [
   {
     name: "Centrum leadów",
     path: ROUTES.core.leads,
+    context: "core",
     icon: IconTargetArrow,
   },
   {
     name: "Organizacja imprez",
     path: ROUTES.events.leads,
+    context: "event",
     icon: IconConfetti,
   },
   {
     name: "Wynajem aut",
     path: ROUTES.vehicles.rental,
+    context: "car",
     icon: IconCar,
   },
   {
     name: "Sprzątanie",
     path: ROUTES.cleaning.index,
+    context: "cleaning",
     icon: IconBoom,
     badge: "MVP",
   },
 ] satisfies {
   name: string;
   path: string;
+  context: AccessContext;
   icon: React.ComponentType<{ size?: number; stroke?: number }>;
   badge?: string;
 }[];
@@ -59,9 +66,16 @@ const MODULE_PATHS = [
   ROUTES.cleaning.index,
 ];
 
-export const AppSidebar = () => {
+interface AppSidebarProps {
+  initialAccessContext: AccessContext;
+}
+
+export const AppSidebar = ({ initialAccessContext }: AppSidebarProps) => {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
+  const visibleItems = NAVIGATION_ITEMS.filter(
+    (item) => item.context === initialAccessContext,
+  );
 
   const isModulePath = (path: string) =>
     pathname === path || pathname.startsWith(`${path}/`);
@@ -75,7 +89,10 @@ export const AppSidebar = () => {
   };
 
   return (
-    <Sidebar variant="floating">
+    <Sidebar
+      variant="floating"
+      className="[&_[data-slot=sidebar-inner]]:bg-white"
+    >
       <SidebarHeader>
         <div className="flex items-center gap-4 px-2 py-3">
           <Image
@@ -95,7 +112,7 @@ export const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {NAVIGATION_ITEMS.map((item) => (
+              {visibleItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton
                     asChild
@@ -130,7 +147,9 @@ export const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter />
+      <SidebarFooter className="bg-sidebar sticky bottom-0 z-10 mt-auto border-t border-sidebar-border">
+        <AccessContextSwitcher initialContext={initialAccessContext} />
+      </SidebarFooter>
     </Sidebar>
   );
 };

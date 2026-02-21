@@ -1,6 +1,9 @@
 import { getDb } from "@/lib/db";
+import { requireAccessContext } from "@/lib/access-context";
 
 export const getEventLeadDetails = async (leadId: string) => {
+  await requireAccessContext(["event"]);
+
   const { event: db } = getDb();
 
   const lead = await db.eventLeadInbox.findUnique({

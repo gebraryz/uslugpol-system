@@ -7,6 +7,7 @@ import { CoreLeadsTable } from "@/features/core/components/leads-table";
 import { getLeads } from "@/features/core/queries/get-leads";
 import { loadCoreLeadsFiltersSearchParams } from "@/features/core/lib/search-params";
 import { FILTERS_DEFAULT_PAGE_SIZE } from "@/features/shared/filters/constants/pagination";
+import { requireAccessContext } from "@/lib/access-context";
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
@@ -35,6 +36,8 @@ const CoreLeadsData = async ({
 };
 
 const CoreLeadsPage = async ({ searchParams }: CoreLeadsPageProps) => {
+  await requireAccessContext(["core"]);
+
   return (
     <AppPage
       title="Centrum leadów"

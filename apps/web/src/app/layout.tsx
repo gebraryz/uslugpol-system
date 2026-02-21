@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { APP_CONFIG } from "@/constants/app-config";
+import { getAccessContext } from "@/lib/access-context";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -26,22 +27,26 @@ export const metadata: Metadata = {
   },
 };
 
-const Layout = ({ children }: LayoutProps) => (
-  <html lang="pl" className={cn(interFont.variable)}>
-    <body>
-      <TooltipProvider>
-        <NuqsAdapter>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset className="border-sidebar-border rounded-lg border shadow-sm md:my-2">
-              {children}
-            </SidebarInset>
-          </SidebarProvider>
-        </NuqsAdapter>
-      </TooltipProvider>
-      <Toaster richColors />
-    </body>
-  </html>
-);
+const Layout = async ({ children }: LayoutProps) => {
+  const accessContext = await getAccessContext();
+
+  return (
+    <html lang="pl" className={cn(interFont.variable)}>
+      <body>
+        <TooltipProvider>
+          <NuqsAdapter>
+            <SidebarProvider>
+              <AppSidebar initialAccessContext={accessContext} />
+              <SidebarInset className="border-sidebar-border rounded-lg border shadow-sm md:my-2">
+                {children}
+              </SidebarInset>
+            </SidebarProvider>
+          </NuqsAdapter>
+        </TooltipProvider>
+        <Toaster richColors />
+      </body>
+    </html>
+  );
+};
 
 export default Layout;

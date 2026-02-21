@@ -1,3 +1,7 @@
+import "server-only";
+
+import type { AccessContext } from "@/constants/access-context";
+import { getAccessContext } from "@/lib/access-context";
 import { createSafeActionClient } from "next-safe-action";
 
 export class ActionError extends Error {
@@ -19,3 +23,21 @@ export const actionClient = createSafeActionClient({
     return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie później";
   },
 });
+
+export const authActionClient = actionClient.use(async ({ next }) => {
+  const accessContext = await getAccessContext();
+
+  return next({ ctx: { accessContext } });
+});
+
+export const actionClientWithAccess = (allowedContexts: AccessContext[]) =>
+  authActionClient.use(async ({ next, ctx }) => {
+    if (!allowedContexts.includes(ctx.accessContext)) {
+      throw new ActionError(
+        "Nie masz odpowiednich uprawnień, aby wykonać tę operację",
+        403,
+      );
+    }
+
+    return next();
+  });
