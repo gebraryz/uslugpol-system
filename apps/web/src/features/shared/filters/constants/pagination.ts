@@ -1,0 +1,2 @@
+export const FILTERS_DEFAULT_PAGE = 1;
+export const FILTERS_DEFAULT_PAGE_SIZE = 10;

@@ -4,25 +4,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
 import dynamic from "next/dynamic";
 
-const LeadDetailsLocationMap = dynamic(
+const LeadLocationMap = dynamic(
   () =>
-    import("./lead-details-location-map.component").then(
-      ({ LeadDetailsLocationMap }) => LeadDetailsLocationMap,
+    import("./lead-location-map").then(
+      ({ LeadLocationMap }) => LeadLocationMap,
     ),
   { ssr: false, loading: () => <Skeleton className="h-64 w-full" /> },
 );
 
-interface LeadDetailsLocationProps {
+interface LeadLocationProps {
   lat: number;
   lng: number;
 }
 
-export const LeadDetailsLocation = ({ lat, lng }: LeadDetailsLocationProps) => {
+export const LeadLocation = ({ lat, lng }: LeadLocationProps) => {
   const { location, isLoading } = useReverseGeocode(lat, lng);
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-      <LeadDetailsLocationMap lat={lat} lng={lng} />
+      <LeadLocationMap lat={lat} lng={lng} />
       <div className="space-y-3 rounded-lg border p-4">
         <div>
           <p className="text-muted-foreground text-sm">

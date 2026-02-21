@@ -2,7 +2,8 @@
 
 import { DataTable } from "@/components/data-table";
 import { LeadChannelBadge } from "@/components/lead-channel-badge";
-import { LeadLocationPreview } from "@/components/lead-location-preview";
+import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
+import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
@@ -16,9 +17,9 @@ import { formatDate, formatId } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { isEventLeadEnriched } from "../lib/enrichment";
-import type { GetEventLeadsResult } from "../queries/get-event-leads";
-import { EventEnrichmentStatusBadge } from "./event-enrichment-status-badge";
+import type { GetEventLeadsResult } from "../../queries/get-event-leads";
+import { EventEnrichmentStatusBadge } from "../event-enrichment-status-badge";
+import { isEventLeadEnriched } from "../../lib/utils";
 
 type EventLeadRow = GetEventLeadsResult["leads"][number];
 
@@ -49,7 +50,7 @@ const COLUMNS: ColumnDef<EventLeadRow>[] = [
   },
   {
     accessorKey: "receivedAt",
-    header: "Odebrano",
+    header: "Odebrano w module",
     cell: ({ row }) => (
       <span suppressHydrationWarning>
         {formatDate(row.original.receivedAt)}
@@ -65,7 +66,7 @@ const COLUMNS: ColumnDef<EventLeadRow>[] = [
     accessorKey: "location",
     header: "Lokalizacja",
     cell: ({ row }) => (
-      <LeadLocationPreview
+      <LeadLocationDialogPreview
         lat={row.original.lat}
         lng={row.original.lng}
         showLabel
@@ -78,6 +79,11 @@ const COLUMNS: ColumnDef<EventLeadRow>[] = [
     cell: ({ row }) => (
       <p className="max-w-sm truncate text-sm">{row.original.description}</p>
     ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status leada",
+    cell: ({ row }) => <LeadStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "enrichmentStatus",

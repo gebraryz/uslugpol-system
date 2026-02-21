@@ -1,6 +1,6 @@
 import { AppPage } from "@/components/app-page";
 import { ROUTES } from "@/constants/routes";
-import { LeadDetails } from "@/features/core/components/lead-details";
+import { CoreLeadDetails } from "@/features/core/components/lead-details";
 import { getLeadDetails } from "@/features/core/queries/get-lead-details";
 import { formatId } from "@/lib/utils";
 import { Metadata } from "next";
@@ -44,7 +44,7 @@ const LeadDetailsPage = async ({ params }: LeadDetailsPageProps) => {
         },
       ]}
     >
-      <LeadDetails data={data} />
+      <CoreLeadDetails data={data} />
     </AppPage>
   );
 };

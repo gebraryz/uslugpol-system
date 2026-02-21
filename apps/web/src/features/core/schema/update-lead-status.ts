@@ -1,4 +1,4 @@
-import { LEAD_STATUS } from "@/constants/lead-status";
+import { LEAD_STATUS } from "@/constants/lead/lead-status";
 import z from "zod";
 
 export const updateLeadStatusSchema = z.object({

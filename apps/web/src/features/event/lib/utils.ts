@@ -10,8 +10,8 @@ export const isEventLeadEnriched = (
 ) =>
   Boolean(
     details &&
-      (details.eventDate !== null ||
-        details.guestCount !== null ||
-        details.budget !== null ||
-        details.isOutdoor !== null),
+    (details.eventDate !== null ||
+      details.guestCount !== null ||
+      details.budget !== null ||
+      details.isOutdoor !== null),
   );

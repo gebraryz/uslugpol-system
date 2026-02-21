@@ -1,4 +1,5 @@
 import { LeadChannelBadge } from "@/components/lead-channel-badge";
+import { LeadLocation } from "@/components/lead-location";
 import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,18 +23,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CopyToClipboardButton } from "@/features/core/components/copy-to-clipboard-button";
 import {
   formatDate,
   toCrossSellRuleLabel,
   toServiceLabelOrUnknown,
 } from "@/lib/utils";
+import { isEventLeadEnriched } from "../lib/utils";
 import type { EventLeadDetailsResult } from "../queries/get-event-lead-details";
-import { isEventLeadEnriched } from "../lib/enrichment";
 import { EventEnrichmentForm } from "./event-enrichment-form";
 import { EventEnrichmentStatusBadge } from "./event-enrichment-status-badge";
 import { EventOpportunityReportForm } from "./event-opportunity-report-form";
-import { CopyToClipboardButton } from "@/features/core/components/copy-to-clipboard-button";
-import { LeadDetailsLocation } from "@/features/core/components/lead-details/lead-details-location.component";
 
 interface EventLeadDetailsProps {
   data: EventLeadDetailsResult;
@@ -61,7 +61,9 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
 
           <div className="flex flex-wrap items-center gap-2">
             <LeadChannelBadge channel={lead.channel} />
+            <span className="text-muted-foreground text-sm">Status leada:</span>
             <LeadStatusBadge status={lead.status} />
+            <span className="text-muted-foreground text-sm">Status modułu:</span>
             <EventEnrichmentStatusBadge isEnriched={isEnriched} />
           </div>
         </CardHeader>
@@ -89,7 +91,7 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
             <p className="text-muted-foreground mb-1 text-sm">Opis</p>
             <p className="whitespace-pre-wrap">{lead.description}</p>
           </div>
-          <LeadDetailsLocation lat={lead.lat} lng={lead.lng} />
+          <LeadLocation lat={lead.lat} lng={lead.lng} />
         </CardContent>
       </Card>
 

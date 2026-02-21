@@ -14,25 +14,25 @@ import { MapPin } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-const LeadLocationPreviewMap = dynamic(
+const LeadLocationDialogPreviewMap = dynamic(
   () =>
-    import("./lead-location-preview-map").then(
-      ({ LeadLocationPreviewMap }) => LeadLocationPreviewMap,
+    import("./lead-location-preview-dialog-map").then(
+      ({ LeadLocationDialogPreviewMap }) => LeadLocationDialogPreviewMap,
     ),
   { ssr: false, loading: () => <Skeleton className="h-85" /> },
 );
 
-interface LeadLocationPreviewProps {
+interface LeadLocationDialogPreviewProps {
   lat: number;
   lng: number;
   showLabel?: boolean;
 }
 
-export const LeadLocationPreview = ({
+export const LeadLocationDialogPreview = ({
   lat,
   lng,
   showLabel = false,
-}: LeadLocationPreviewProps) => {
+}: LeadLocationDialogPreviewProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { location, isLoading } = useReverseGeocode(
     lat,
@@ -74,7 +74,7 @@ export const LeadLocationPreview = ({
               )}
             </div>
           )}
-          <LeadLocationPreviewMap lat={lat} lng={lng} />
+          <LeadLocationDialogPreviewMap lat={lat} lng={lng} />
         </DialogContent>
       </Dialog>
     </div>

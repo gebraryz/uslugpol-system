@@ -21,9 +21,9 @@ import {
   CROSS_SELL_STATUS_LABELS,
   CrossSellStatus,
 } from "@/constants/cross-sell";
-import { LEAD_CATEGORIES_LABELS } from "@/constants/lead-categories";
-import { LEAD_CHANNELS_LABELS } from "@/constants/lead-channels";
-import { LEAD_STATUS_LABELS } from "@/constants/lead-status";
+import { LEAD_CATEGORIES_LABELS } from "@/constants/lead/lead-categories";
+import { LEAD_CHANNELS_LABELS } from "@/constants/lead/lead-channels";
+import { LEAD_STATUS_LABELS } from "@/constants/lead/lead-status";
 import {
   formatDate,
   formatJson,
@@ -44,8 +44,8 @@ import {
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import type {
-  LeadDetailsAuditLog,
-  LeadDetailsAuditLogEntry,
+  CoreLeadDetailsAuditLog,
+  CoreLeadDetailsAuditLogEntry,
 } from "./lead-details.types";
 import { isLeadStatus } from "./lead-details.utils";
 
@@ -55,7 +55,9 @@ interface AuditTimelineSummary {
   subtitle: string;
 }
 
-const summarize = (event: LeadDetailsAuditLogEntry): AuditTimelineSummary => {
+const summarize = (
+  event: CoreLeadDetailsAuditLogEntry,
+): AuditTimelineSummary => {
   const payload = isObjectRecord(event.payload) ? event.payload : null;
   const group = toAuditEventGroup(event.eventType);
 
@@ -176,13 +178,13 @@ const isCrossSellStatus = (value: unknown): value is CrossSellStatus =>
 const toCrossSellDecisionLabel = (value: unknown) =>
   isCrossSellStatus(value) ? toCrossSellStatusLabel(value) : null;
 
-interface LeadAuditTimelineProps {
-  events: LeadDetailsAuditLog;
+interface CoreLeadDetailsAuditTimelineProps {
+  events: CoreLeadDetailsAuditLog;
 }
 
-export const LeadDetailsAuditTimeline = ({
+export const CoreLeadDetailsAuditTimeline = ({
   events,
-}: LeadAuditTimelineProps) => {
+}: CoreLeadDetailsAuditTimelineProps) => {
   const [activeFilter, setActiveFilter] = useState<AuditEventGroup | "all">(
     "all",
   );

@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { QuerySelectOption } from "../lib/query-select";
 import { QuerySelect } from "./query-select";
+import { QuerySelectOption } from "../types/query-select-option";
 
 export interface QuerySelectItem {
   queryKey: string;
@@ -16,7 +16,7 @@ interface QuerySelectsProps {
 }
 
 export const QuerySelects = ({ items, className }: QuerySelectsProps) => (
-  <div className={cn("flex flex-wrap gap-3", className)}>
+  <div className={cn("flex w-full flex-col gap-3 md:flex-row md:flex-wrap", className)}>
     {items.map((item) => {
       if (!item.options.length) return null;
 

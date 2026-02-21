@@ -1,7 +1,7 @@
 "use server";
 
 import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
-import { LEAD_CATEGORY_MODULES } from "@/constants/lead-category-modules";
+import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
 import { ROUTES } from "@/constants/routes";
 import { getDb } from "@/lib/db";
 import { getEventBus } from "@/lib/event-bus";
@@ -26,6 +26,9 @@ export const upsertEventEnrichmentAction = actionClient
     const eventDate = parsedInput.eventDate
       ? new Date(`${parsedInput.eventDate}T00:00:00.000Z`)
       : null;
+    const guestCount = parsedInput.guestCount ?? null;
+    const budget = parsedInput.budget ?? null;
+    const isOutdoor = parsedInput.isOutdoor ?? null;
     const correlationId = crypto.randomUUID();
     const enrichedAt = new Date().toISOString();
 
@@ -35,16 +38,16 @@ export const upsertEventEnrichmentAction = actionClient
         id: crypto.randomUUID(),
         leadId: parsedInput.leadId,
         eventDate,
-        guestCount: parsedInput.guestCount,
-        budget: parsedInput.budget,
-        isOutdoor: parsedInput.isOutdoor,
+        guestCount,
+        budget,
+        isOutdoor,
         updatedAt: new Date(),
       },
       update: {
         eventDate,
-        guestCount: parsedInput.guestCount,
-        budget: parsedInput.budget,
-        isOutdoor: parsedInput.isOutdoor,
+        guestCount,
+        budget,
+        isOutdoor,
         updatedAt: new Date(),
       },
     });
@@ -63,9 +66,9 @@ export const upsertEventEnrichmentAction = actionClient
           namespace: LEAD_CATEGORY_MODULES.EVENT.assignedService,
           data: {
             eventDate: eventDate ? eventDate.toISOString() : null,
-            guestCount: parsedInput.guestCount,
-            budget: parsedInput.budget,
-            isOutdoor: parsedInput.isOutdoor,
+            guestCount,
+            budget,
+            isOutdoor,
           },
           enrichedAt,
           correlationId,

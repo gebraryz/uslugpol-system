@@ -1,11 +1,9 @@
 import { getDb } from "@/lib/db";
-import type { LeadCategory } from "@/constants/lead-categories";
-import type { LeadChannel } from "@/constants/lead-channels";
-import type { LeadStatus } from "@/constants/lead-status";
-import {
-  type PaginationParams,
-  toPaginationMeta,
-} from "@/features/shared/filters/lib/pagination";
+import type { LeadCategory } from "@/constants/lead/lead-categories";
+import type { LeadChannel } from "@/constants/lead/lead-channels";
+import type { LeadStatus } from "@/constants/lead/lead-status";
+import { PaginationParams } from "@/features/shared/filters/types/pagination";
+import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
 
 interface CoreLeadsFilters {
   id?: string | null;

@@ -9,8 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { parseAsString, useQueryState } from "nuqs";
-import type { QuerySelectOption } from "../lib/query-select";
 import { pageParser } from "../lib/search-params";
+import { QuerySelectOption } from "../types/query-select-option";
 
 interface QuerySelectProps {
   queryKey: string;
@@ -24,10 +24,13 @@ const ALL_OPTIONS_LABEL = "Wszystkie";
 const queryStateParser = parseAsString.withOptions({
   shallow: false,
   history: "push",
-});
+}).withDefault(ALL_OPTIONS);
 
 export const QuerySelect = ({ queryKey, label, options }: QuerySelectProps) => {
   const allowedValues = options.map((option) => option.value);
+  const optionLabels = Object.fromEntries(
+    options.map((option) => [option.value, option.label]),
+  ) as Record<string, string>;
 
   const [value, setValue] = useQueryState(queryKey, queryStateParser);
   const [, setPage] = useQueryState(
@@ -35,22 +38,27 @@ export const QuerySelect = ({ queryKey, label, options }: QuerySelectProps) => {
     pageParser.withOptions({ shallow: false, history: "push" }),
   );
 
-  const currentValue =
-    value && allowedValues.includes(value) ? value : ALL_OPTIONS;
+  const currentValue = allowedValues.includes(value) ? value : ALL_OPTIONS;
+  const currentLabel =
+    currentValue === ALL_OPTIONS
+      ? ALL_OPTIONS_LABEL
+      : optionLabels[currentValue] ?? ALL_OPTIONS_LABEL;
 
   const onValueChange = (nextValue: string) => {
     const parsedValue = nextValue === ALL_OPTIONS ? null : nextValue;
 
     setValue(parsedValue);
-    setPage(1);
+    setPage(null);
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2 md:w-auto md:min-w-44">
       <Label>{label}</Label>
       <Select value={currentValue} onValueChange={onValueChange}>
-        <SelectTrigger>
-          <SelectValue placeholder={ALL_OPTIONS_LABEL} />
+        <SelectTrigger className="w-full md:min-w-44">
+          <SelectValue placeholder={ALL_OPTIONS_LABEL}>
+            {currentLabel}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={ALL_OPTIONS}>{ALL_OPTIONS_LABEL}</SelectItem>

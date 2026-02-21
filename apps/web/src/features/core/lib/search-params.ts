@@ -1,6 +1,6 @@
-import { LEAD_CATEGORIES } from "@/constants/lead-categories";
-import { LEAD_CHANNELS } from "@/constants/lead-channels";
-import { LEAD_STATUS } from "@/constants/lead-status";
+import { LEAD_CATEGORIES } from "@/constants/lead/lead-categories";
+import { LEAD_CHANNELS } from "@/constants/lead/lead-channels";
+import { LEAD_STATUS } from "@/constants/lead/lead-status";
 import { pageParser } from "@/features/shared/filters/lib/search-params";
 import { createLoader, parseAsString, parseAsStringLiteral } from "nuqs/server";
 

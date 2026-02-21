@@ -7,9 +7,9 @@ import { getEventBus } from "@/lib/event-bus";
 import { LeadStatus } from "@uslugpol/core/enums";
 import crypto from "node:crypto";
 import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
-import { LEAD_CATEGORY_MODULES } from "@/constants/lead-category-modules";
+import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
 
-export const createLeadAction = actionClient
+export const createCoreLeadAction = actionClient
   .inputSchema(createLeadSchema)
   .action(async ({ parsedInput }) => {
     const { core: db } = getDb();

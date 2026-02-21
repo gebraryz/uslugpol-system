@@ -22,15 +22,15 @@ import {
   toCrossSellStatusLabel,
   toServiceLabelOrUnknown,
 } from "@/lib/utils";
-import type { LeadDetailsLead } from "./lead-details.types";
+import type { CoreLeadDetailsLead } from "./lead-details.types";
 
-interface LeadDetailsCrossSellCardProps {
-  lead: LeadDetailsLead;
+interface CoreLeadDetailsCrossSellCardProps {
+  lead: CoreLeadDetailsLead;
 }
 
-export const LeadDetailsCrossSellCard = ({
+export const CoreLeadDetailsCrossSellCard = ({
   lead,
-}: LeadDetailsCrossSellCardProps) => (
+}: CoreLeadDetailsCrossSellCardProps) => (
   <Card>
     <CardHeader>
       <CardTitle>Rekomendacje cross-sell</CardTitle>
@@ -42,8 +42,8 @@ export const LeadDetailsCrossSellCard = ({
             <EmptyTitle>Brak rekomendacji</EmptyTitle>
             {lead.category !== "EVENT" ? (
               <EmptyDescription>
-                Rekomendacje cross-sell są dostępne dla leadów kategorii{" "}
-                <code>EVENT</code>.
+                Rekomendacje dodatkowych usług pojawiają się dla zgłoszeń
+                dotyczących wydarzeń.
               </EmptyDescription>
             ) : (
               <EmptyDescription>

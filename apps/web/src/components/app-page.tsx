@@ -16,11 +16,15 @@ export const AppPage = ({
 }: AppPageProps) => (
   <>
     <AppTopBar breadcrumbs={breadcrumbs} />
-    <div className="@container/main flex flex-1 flex-col gap-2 px-12">
+    <div className="@container/main flex flex-1 flex-col gap-2 md:px-8 px-4">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="font-bold text-4xl">{title}</h1>
-          {headerAction}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="font-bold text-3xl sm:text-4xl">{title}</h1>
+          {headerAction ? (
+            <div className="w-full sm:w-auto sm:shrink-0 *:w-full sm:*:w-auto">
+              {headerAction}
+            </div>
+          ) : null}
         </div>
         {children}
       </div>

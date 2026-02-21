@@ -1,6 +1,13 @@
-import type { CrossSellOpportunityStatus } from "@uslugpol/core/enums";
+import {
+  CrossSellOpportunityStatus as CrossSellOpportunityStatusEnum,
+  type CrossSellOpportunityStatus,
+} from "@uslugpol/core/enums";
 
 export type CrossSellStatus = CrossSellOpportunityStatus;
+
+export const CROSS_SELL_STATUSES = Object.values(
+  CrossSellOpportunityStatusEnum,
+) as [CrossSellStatus, ...CrossSellStatus[]];
 
 export const CROSS_SELL_STATUS_LABELS = {
   PENDING: "Propozycja",

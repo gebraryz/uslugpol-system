@@ -5,15 +5,12 @@ import { useMemo } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 
-interface LeadDetailsLocationMapProps {
+interface LeadLocationMapProps {
   lat: number;
   lng: number;
 }
 
-export const LeadDetailsLocationMap = ({
-  lat,
-  lng,
-}: LeadDetailsLocationMapProps) => {
+export const LeadLocationMap = ({ lat, lng }: LeadLocationMapProps) => {
   const center = useMemo<LatLngLiteral>(() => ({ lat, lng }), [lat, lng]);
 
   return (

@@ -3,7 +3,7 @@
 import { DataTable } from "@/components/data-table";
 import { LeadCategoryBadge } from "@/components/lead-category-badge";
 import { LeadChannelBadge } from "@/components/lead-channel-badge";
-import { LeadLocationPreview } from "@/components/lead-location-preview";
+import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
 import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -11,8 +11,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LEAD_CATEGORIES_LABELS } from "@/constants/lead-categories";
-import { LEAD_CHANNELS_LABELS } from "@/constants/lead-channels";
+import { LEAD_CATEGORIES_LABELS } from "@/constants/lead/lead-categories";
+import { LEAD_CHANNELS_LABELS } from "@/constants/lead/lead-channels";
 import { ROUTES } from "@/constants/routes";
 import { PaginationControls } from "@/features/shared/filters/components/pagination-controls";
 import { formatDate, formatId } from "@/lib/utils";
@@ -71,7 +71,7 @@ const COLUMNS: ColumnDef<LeadRow>[] = [
     accessorKey: "location",
     header: "Lokalizacja",
     cell: ({ row }) => (
-      <LeadLocationPreview
+      <LeadLocationDialogPreview
         lat={row.original.lat}
         lng={row.original.lng}
         showLabel
@@ -105,7 +105,7 @@ interface LeadsTableProps {
   totalPages: number;
 }
 
-export const LeadsTable = ({ data, page, totalPages }: LeadsTableProps) => (
+export const CoreLeadsTable = ({ data, page, totalPages }: LeadsTableProps) => (
   <div>
     <DataTable columns={COLUMNS} data={data} />
     <PaginationControls page={page} totalPages={totalPages} />

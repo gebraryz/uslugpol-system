@@ -1,4 +1,4 @@
-import { LEAD_STATUS, LeadStatus } from "@/constants/lead-status";
+import { LEAD_STATUS, LeadStatus } from "@/constants/lead/lead-status";
 
 export const isLeadStatus = (value: unknown): value is LeadStatus =>
   typeof value === "string" &&

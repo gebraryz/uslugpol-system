@@ -13,23 +13,23 @@ import {
   LEAD_STATUS_FLOW,
   LEAD_STATUS_LABELS,
   type LeadStatus,
-} from "@/constants/lead-status";
+} from "@/constants/lead/lead-status";
 import { cn, formatDate, isObjectRecord } from "@/lib/utils";
 import { IconArrowRight } from "@tabler/icons-react";
 import { CopyToClipboardButton } from "../copy-to-clipboard-button";
-import { LeadDetailsStatusControl } from "./lead-details-status-control.component";
+import { CoreLeadDetailsStatusControl } from "./lead-details-status-control.component";
 import type {
-  LeadDetailsAuditLog,
-  LeadDetailsLead,
+  CoreLeadDetailsAuditLog,
+  CoreLeadDetailsLead,
 } from "./lead-details.types";
 import { isLeadStatus } from "./lead-details.utils";
 
-interface LeadDetailsHeaderCardProps {
-  lead: LeadDetailsLead;
-  auditLog: LeadDetailsAuditLog;
+interface CoreLeadDetailsHeaderCardProps {
+  lead: CoreLeadDetailsLead;
+  auditLog: CoreLeadDetailsAuditLog;
 }
 
-const getStatusHistory = (auditLog: LeadDetailsAuditLog) =>
+const getStatusHistory = (auditLog: CoreLeadDetailsAuditLog) =>
   auditLog
     .filter(
       (event) => event.eventType === AUDIT_EVENT_TYPES.LEAD_STATUS_CHANGED,
@@ -51,10 +51,10 @@ const getStatusHistory = (auditLog: LeadDetailsAuditLog) =>
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
     .slice(0, 3);
 
-export const LeadDetailsHeaderCard = ({
+export const CoreLeadDetailsHeaderCard = ({
   lead,
   auditLog,
-}: LeadDetailsHeaderCardProps) => {
+}: CoreLeadDetailsHeaderCardProps) => {
   const currentStatus = lead.status as LeadStatus;
   const currentStatusIndex = LEAD_STATUS_FLOW.indexOf(currentStatus);
 
@@ -72,7 +72,10 @@ export const LeadDetailsHeaderCard = ({
             </div>
           </div>
 
-          <LeadDetailsStatusControl leadId={lead.id} status={currentStatus} />
+          <CoreLeadDetailsStatusControl
+            leadId={lead.id}
+            status={currentStatus}
+          />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -85,8 +88,9 @@ export const LeadDetailsHeaderCard = ({
         <Separator />
 
         <div className="space-y-3">
-          <p className="text-sm font-medium">Status flow</p>
-          <div className="flex items-center gap-2">
+          <p className="text-sm font-medium">Etapy obsługi</p>
+          <div className="overflow-x-auto pb-1">
+            <div className="flex min-w-max items-center gap-2">
             {LEAD_STATUS_FLOW.map((status, index) => {
               const isDone = index < currentStatusIndex;
               const isCurrent = index === currentStatusIndex;
@@ -104,9 +108,10 @@ export const LeadDetailsHeaderCard = ({
                     {index + 1}
                   </div>
                   <span
-                    className={
-                      isCurrent ? "font-medium" : "text-muted-foreground"
-                    }
+                    className={cn(
+                      "text-sm",
+                      isCurrent ? "font-medium" : "text-muted-foreground",
+                    )}
                   >
                     {LEAD_STATUS_LABELS[status]}
                   </span>
@@ -116,6 +121,7 @@ export const LeadDetailsHeaderCard = ({
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 

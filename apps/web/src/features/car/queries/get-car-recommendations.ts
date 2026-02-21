@@ -1,25 +1,52 @@
 import { getDb } from "@/lib/db";
-import {
-  type PaginationParams,
-  toPaginationMeta,
-} from "@/features/shared/filters/lib/pagination";
-import type { CrossSellRuleKey } from "@/constants/cross-sell";
+import type { CrossSellRuleKey, CrossSellStatus } from "@/constants/cross-sell";
+import { PaginationParams } from "@/features/shared/filters/types/pagination";
+import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
+import type { CarRecommendationReviewState } from "../constants/recommendation-review-state";
 
 interface CarRecommendationsFilters {
   id?: string | null;
   ruleKey?: CrossSellRuleKey | null;
+  status?: CrossSellStatus | null;
+  reviewState?: CarRecommendationReviewState | null;
 }
+
+const REVIEWED_STATUSES: CrossSellStatus[] = ["ACCEPTED", "DECLINED"];
 
 export const getCarRecommendations = async ({
   page,
   pageSize,
   id,
   ruleKey,
+  status,
+  reviewState,
 }: PaginationParams & CarRecommendationsFilters) => {
   const { car: db } = getDb();
 
+  if (reviewState === "UNREVIEWED" && status && status !== "PENDING") {
+    return {
+      recommendations: [],
+      ...toPaginationMeta({ page, pageSize, totalItems: 0 }),
+    };
+  }
+
+  if (reviewState === "REVIEWED" && status === "PENDING") {
+    return {
+      recommendations: [],
+      ...toPaginationMeta({ page, pageSize, totalItems: 0 }),
+    };
+  }
+
+  const statusFilter =
+    reviewState === "UNREVIEWED"
+      ? "PENDING"
+      : reviewState === "REVIEWED"
+        ? status ?? { in: REVIEWED_STATUSES }
+        : status;
+
   const where = {
     ...(ruleKey ? { ruleKey } : {}),
+    ...(statusFilter ? { status: statusFilter } : {}),
     ...(id
       ? {
           OR: [
@@ -31,11 +58,7 @@ export const getCarRecommendations = async ({
   };
 
   const totalItems = await db.crossSellInbox.count({ where });
-  const pagination = toPaginationMeta({
-    page,
-    pageSize,
-    totalItems,
-  });
+  const pagination = toPaginationMeta({ page, pageSize, totalItems });
 
   const recommendations = await db.crossSellInbox.findMany({
     where,
@@ -61,6 +84,8 @@ export const getCarRecommendations = async ({
   };
 };
 
-export type GetCarRecommendationsResult = Awaited<
+export type CarRecommendationsResult = Awaited<
   ReturnType<typeof getCarRecommendations>
 >;
+export type CarRecommendation =
+  CarRecommendationsResult["recommendations"][number];

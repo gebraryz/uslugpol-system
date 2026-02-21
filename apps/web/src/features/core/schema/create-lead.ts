@@ -1,5 +1,5 @@
-import { LEAD_CATEGORIES } from "@/constants/lead-categories";
-import { LEAD_CHANNELS } from "@/constants/lead-channels";
+import { LEAD_CATEGORIES } from "@/constants/lead/lead-categories";
+import { LEAD_CHANNELS } from "@/constants/lead/lead-channels";
 import z from "zod";
 
 export const createLeadSchema = z.object({

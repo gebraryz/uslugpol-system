@@ -1,10 +1,8 @@
 import { getDb } from "@/lib/db";
-import {
-  type PaginationParams,
-  toPaginationMeta,
-} from "@/features/shared/filters/lib/pagination";
-import type { LeadChannel } from "@/constants/lead-channels";
-import type { EventModuleStatus } from "../constants/module-status";
+import type { LeadChannel } from "@/constants/lead/lead-channels";
+import type { EventModuleStatus } from "../constants/event-module-status";
+import { PaginationParams } from "@/features/shared/filters/types/pagination";
+import { toPaginationMeta } from "@/features/shared/filters/lib/utils";
 
 interface EventLeadsFilters {
   id?: string | null;
@@ -23,7 +21,9 @@ export const getEventLeads = async ({
 
   const where = {
     ...(id ? { leadId: { contains: id } } : {}),
+
     ...(channel ? { channel } : {}),
+
     ...(moduleStatus === "ENRICHED"
       ? { details: { isNot: null } }
       : moduleStatus === "TO_ENRICH"
@@ -32,11 +32,7 @@ export const getEventLeads = async ({
   };
 
   const totalItems = await db.eventLeadInbox.count({ where });
-  const pagination = toPaginationMeta({
-    page,
-    pageSize,
-    totalItems,
-  });
+  const pagination = toPaginationMeta({ page, pageSize, totalItems });
 
   const leads = await db.eventLeadInbox.findMany({
     where,
@@ -64,10 +60,7 @@ export const getEventLeads = async ({
     },
   });
 
-  return {
-    leads,
-    ...pagination,
-  };
+  return { leads, ...pagination };
 };
 
 export type GetEventLeadsResult = Awaited<ReturnType<typeof getEventLeads>>;

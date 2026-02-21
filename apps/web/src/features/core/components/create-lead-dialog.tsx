@@ -22,25 +22,28 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   LEAD_CATEGORIES_LABELS,
   LeadCategory,
-} from "@/constants/lead-categories";
-import { LEAD_CHANNELS_LABELS, LeadChannel } from "@/constants/lead-channels";
+} from "@/constants/lead/lead-categories";
+import {
+  LEAD_CHANNELS_LABELS,
+  LeadChannel,
+} from "@/constants/lead/lead-channels";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
-import { createLeadAction } from "../actions/create-lead";
+import { createCoreLeadAction } from "../actions/create-lead";
 import { createLeadSchema } from "../schema/create-lead";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
-export const CreateLeadDialog = () => {
+export const CreateCoreLeadDialog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
   const {
     form,
     action: { isPending },
     handleSubmitWithAction,
-  } = useHookFormAction(createLeadAction, zodResolver(createLeadSchema), {
+  } = useHookFormAction(createCoreLeadAction, zodResolver(createLeadSchema), {
     actionProps: {
       onSuccess: ({ data }) => {
         router.refresh();
@@ -59,11 +62,16 @@ export const CreateLeadDialog = () => {
           );
         }
       },
-      onError: () => {
-        toast.error("Wystąpił błąd podczas tworzenia leada");
+      onError: ({ error }) => {
+        toast.error(
+          error.serverError ??
+            "Nie udało się utworzyć leada. Sprawdź wymagane pola.",
+        );
       },
     },
   });
+  const selectedChannel = form.watch("channel");
+  const selectedCategory = form.watch("category");
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -78,12 +86,27 @@ export const CreateLeadDialog = () => {
           <DialogTitle>Utwórz nowego leada</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmitWithAction}>
+          <input type="hidden" {...form.register("channel")} />
+          <input type="hidden" {...form.register("category")} />
+          <input
+            type="hidden"
+            {...form.register("lat", { valueAsNumber: true })}
+          />
+          <input
+            type="hidden"
+            {...form.register("lng", { valueAsNumber: true })}
+          />
+
           <FieldSet>
             <Field data-invalid={!!form.formState.errors.channel}>
               <FieldLabel htmlFor="channel">Kanał</FieldLabel>
               <Select
+                value={selectedChannel}
                 onValueChange={(value: LeadChannel) => {
-                  form.setValue("channel", value, { shouldDirty: true });
+                  form.setValue("channel", value, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
                 }}
               >
                 <SelectTrigger>
@@ -109,8 +132,12 @@ export const CreateLeadDialog = () => {
             <Field data-invalid={!!form.formState.errors.category}>
               <FieldLabel htmlFor="category">Kategoria</FieldLabel>
               <Select
+                value={selectedCategory}
                 onValueChange={(value: LeadCategory) => {
-                  form.setValue("category", value, { shouldDirty: true });
+                  form.setValue("category", value, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
                 }}
               >
                 <SelectTrigger>
@@ -147,8 +174,14 @@ export const CreateLeadDialog = () => {
               <FieldLabel>Lokalizacja</FieldLabel>
               <LocationPicker
                 onChange={(value) => {
-                  form.setValue("lat", value.lat, { shouldDirty: true });
-                  form.setValue("lng", value.lng, { shouldDirty: true });
+                  form.setValue("lat", value.lat, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+                  form.setValue("lng", value.lng, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
                 }}
               />
               {form.formState.errors.lat && (

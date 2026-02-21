@@ -1,8 +1,8 @@
 import type { LeadDetailsResult } from "../../queries/get-lead-details";
 
-export type LeadDetailsData = LeadDetailsResult;
+export type CoreLeadDetailsData = LeadDetailsResult;
 
-export type LeadDetailsLead = LeadDetailsData["lead"];
+export type CoreLeadDetailsLead = CoreLeadDetailsData["lead"];
 
-export type LeadDetailsAuditLog = LeadDetailsData["auditLog"];
-export type LeadDetailsAuditLogEntry = LeadDetailsAuditLog[number];
+export type CoreLeadDetailsAuditLog = CoreLeadDetailsData["auditLog"];
+export type CoreLeadDetailsAuditLogEntry = CoreLeadDetailsAuditLog[number];

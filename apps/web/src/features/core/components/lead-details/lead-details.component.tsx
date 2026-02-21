@@ -1,3 +1,5 @@
+import { LeadLocation } from "@/components/lead-location";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -5,26 +7,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { KEY_AUDIT_EVENTS } from "@/constants/audit-events";
-import { LeadDetailsAuditTimeline } from "./lead-details-audit-timeline.component";
-import { LeadDetailsLocation } from "./lead-details-location.component";
-import { LeadDetailsCrossSellCard } from "./lead-details-cross-sell-card.component";
-import { LeadDetailsExtensionsCard } from "./lead-details-extensions-card.component";
-import { LeadDetailsHeaderCard } from "./lead-details-header-card.component";
-import type { LeadDetailsData } from "./lead-details.types";
+import { CoreLeadDetailsAuditTimeline } from "./lead-details-audit-timeline.component";
+import { CoreLeadDetailsCrossSellCard } from "./lead-details-cross-sell-card.component";
+import { CoreLeadDetailsExtensionsCard } from "./lead-details-extensions-card.component";
+import { CoreLeadDetailsHeaderCard } from "./lead-details-header-card.component";
+import { CoreLeadDetailsData } from "./lead-details.types";
 
-interface LeadDetailsProps {
-  data: LeadDetailsData;
+interface CoreLeadDetailsProps {
+  data: CoreLeadDetailsData;
 }
 
-export const LeadDetails = ({ data }: LeadDetailsProps) => {
+export const CoreLeadDetails = ({ data }: CoreLeadDetailsProps) => {
   const { lead, auditLog } = data;
+
   const existingEventTypes = new Set(auditLog.map((event) => event.eventType));
 
   return (
     <div className="space-y-6 pb-10">
-      <LeadDetailsHeaderCard lead={lead} auditLog={auditLog} />
+      <CoreLeadDetailsHeaderCard lead={lead} auditLog={auditLog} />
 
       <Card>
         <CardHeader>
@@ -35,12 +36,12 @@ export const LeadDetails = ({ data }: LeadDetailsProps) => {
             <p className="text-muted-foreground mb-1 text-sm">Opis leada</p>
             <p className="whitespace-pre-wrap">{lead.description}</p>
           </div>
-          <LeadDetailsLocation lat={lead.lat} lng={lead.lng} />
+          <LeadLocation lat={lead.lat} lng={lead.lng} />
         </CardContent>
       </Card>
 
-      <LeadDetailsExtensionsCard lead={lead} />
-      <LeadDetailsCrossSellCard lead={lead} />
+      <CoreLeadDetailsExtensionsCard lead={lead} />
+      <CoreLeadDetailsCrossSellCard lead={lead} />
 
       <Card>
         <CardHeader>
@@ -60,7 +61,7 @@ export const LeadDetails = ({ data }: LeadDetailsProps) => {
           </div>
         </CardHeader>
         <CardContent>
-          <LeadDetailsAuditTimeline events={auditLog} />
+          <CoreLeadDetailsAuditTimeline events={auditLog} />
         </CardContent>
       </Card>
     </div>

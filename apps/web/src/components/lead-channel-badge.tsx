@@ -1,7 +1,7 @@
 import {
   LEAD_CHANNELS_LABELS,
   type LeadChannel,
-} from "@/constants/lead-channels";
+} from "@/constants/lead/lead-channels";
 import { FileText, Mail, Phone, type LucideIcon } from "lucide-react";
 import { Badge } from "./ui/badge";
 

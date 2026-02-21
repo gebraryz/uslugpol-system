@@ -21,10 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { toast } from "sonner";
 import { upsertEventEnrichmentAction } from "../actions/upsert-event-enrichment";
-import {
-  EVENT_ENRICHMENT_OUTDOOR_VALUES,
-  upsertEventEnrichmentSchema,
-} from "../schema/upsert-event-enrichment";
+import { upsertEventEnrichmentSchema } from "../schema/upsert-event-enrichment";
 
 interface EventEnrichmentFormProps {
   leadId: string;
@@ -38,14 +35,27 @@ interface EventEnrichmentFormProps {
 }
 
 const toDateInput = (date: Date | null) =>
-  date ? new Date(date).toISOString().slice(0, 10) : "";
+  date ? new Date(date).toISOString().slice(0, 10) : undefined;
 
-type OutdoorValue = (typeof EVENT_ENRICHMENT_OUTDOOR_VALUES)[number];
+type OutdoorSelectValue = "unknown" | "true" | "false";
 
-const toOutdoorValue = (value: boolean | null): OutdoorValue => {
+const toOutdoorSelectValue = (
+  value: boolean | null | undefined,
+): OutdoorSelectValue => {
   if (value === true) return "true";
   if (value === false) return "false";
   return "unknown";
+};
+
+const fromOutdoorSelectValue = (value: OutdoorSelectValue): boolean | null => {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return null;
+};
+
+const toNullableInt = (value: string): number | null => {
+  if (value.trim() === "") return null;
+  return Number(value);
 };
 
 export const EventEnrichmentForm = ({
@@ -80,9 +90,9 @@ export const EventEnrichmentForm = ({
         defaultValues: {
           leadId,
           eventDate: toDateInput(initialData?.eventDate ?? null),
-          guestCount: initialData?.guestCount?.toString() ?? "",
-          budget: initialData?.budget?.toString() ?? "",
-          isOutdoor: toOutdoorValue(initialData?.isOutdoor ?? null),
+          guestCount: initialData?.guestCount ?? undefined,
+          budget: initialData?.budget ?? undefined,
+          isOutdoor: initialData?.isOutdoor ?? null,
         },
       },
     },
@@ -97,7 +107,14 @@ export const EventEnrichmentForm = ({
       <FieldSet>
         <Field data-invalid={!!form.formState.errors.eventDate}>
           <FieldLabel htmlFor="eventDate">Data wydarzenia</FieldLabel>
-          <Input id="eventDate" type="date" {...form.register("eventDate")} />
+          <Input
+            id="eventDate"
+            type="date"
+            {...form.register("eventDate", {
+              setValueAs: (value) =>
+                typeof value === "string" && value.trim() === "" ? null : value,
+            })}
+          />
           {form.formState.errors.eventDate && (
             <FieldError>{form.formState.errors.eventDate.message}</FieldError>
           )}
@@ -109,7 +126,9 @@ export const EventEnrichmentForm = ({
             id="guestCount"
             type="number"
             min={1}
-            {...form.register("guestCount")}
+            {...form.register("guestCount", {
+              setValueAs: (value) => toNullableInt(String(value ?? "")),
+            })}
           />
           {form.formState.errors.guestCount && (
             <FieldError>{form.formState.errors.guestCount.message}</FieldError>
@@ -122,7 +141,9 @@ export const EventEnrichmentForm = ({
             id="budget"
             type="number"
             min={0}
-            {...form.register("budget")}
+            {...form.register("budget", {
+              setValueAs: (value) => toNullableInt(String(value ?? "")),
+            })}
           />
           {form.formState.errors.budget && (
             <FieldError>{form.formState.errors.budget.message}</FieldError>
@@ -132,11 +153,15 @@ export const EventEnrichmentForm = ({
         <Field data-invalid={!!form.formState.errors.isOutdoor}>
           <FieldLabel>Czy plener?</FieldLabel>
           <Select
-            value={isOutdoor}
+            value={toOutdoorSelectValue(isOutdoor)}
             onValueChange={(value) => {
-              form.setValue("isOutdoor", value as OutdoorValue, {
-                shouldDirty: true,
-              });
+              form.setValue(
+                "isOutdoor",
+                fromOutdoorSelectValue(value as OutdoorSelectValue),
+                {
+                  shouldDirty: true,
+                },
+              );
             }}
           >
             <SelectTrigger>

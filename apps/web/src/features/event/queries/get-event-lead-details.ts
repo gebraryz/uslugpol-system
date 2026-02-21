@@ -26,7 +26,6 @@ export const getEventLeadDetails = async (leadId: string) => {
   return { lead, opportunityReports };
 };
 
-export type GetEventLeadDetailsResult = Awaited<
-  ReturnType<typeof getEventLeadDetails>
+export type EventLeadDetailsResult = NonNullable<
+  Awaited<ReturnType<typeof getEventLeadDetails>>
 >;
-export type EventLeadDetailsResult = NonNullable<GetEventLeadDetailsResult>;

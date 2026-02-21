@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/data-table";
-import { LeadLocationPreview } from "@/components/lead-location-preview";
+import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -19,7 +19,8 @@ import {
   toCrossSellStatusLabel,
 } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import type { GetCarRecommendationsResult } from "../queries/get-car-recommendations";
+import type { CarRecommendation } from "../queries/get-car-recommendations";
+import { CarRecommendationDecisionActions } from "./car-recommendation-decision-actions";
 
 const readSnapshotLocation = (context: unknown) => {
   if (!isObjectRecord(context)) {
@@ -41,10 +42,7 @@ const readSnapshotLocation = (context: unknown) => {
   return { lat, lng };
 };
 
-type CarRecommendationRow =
-  GetCarRecommendationsResult["recommendations"][number];
-
-const COLUMNS: ColumnDef<CarRecommendationRow>[] = [
+const COLUMNS: ColumnDef<CarRecommendation>[] = [
   {
     accessorKey: "leadId",
     header: "Lead",
@@ -85,7 +83,7 @@ const COLUMNS: ColumnDef<CarRecommendationRow>[] = [
       if (!location) return "Brak";
 
       return (
-        <LeadLocationPreview lat={location.lat} lng={location.lng} showLabel />
+        <LeadLocationDialogPreview lat={location.lat} lng={location.lng} showLabel />
       );
     },
   },
@@ -107,10 +105,20 @@ const COLUMNS: ColumnDef<CarRecommendationRow>[] = [
       </span>
     ),
   },
+  {
+    accessorKey: "actions",
+    header: "Decyzja",
+    cell: ({ row }) => (
+      <CarRecommendationDecisionActions
+        recommendationId={row.original.id}
+        status={row.original.status}
+      />
+    ),
+  },
 ];
 
 interface CarRecommendationsTableProps {
-  data: CarRecommendationRow[];
+  data: CarRecommendation[];
   page: number;
   totalPages: number;
 }

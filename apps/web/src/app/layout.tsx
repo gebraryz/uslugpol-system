@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { CSSProperties, ReactNode } from "react";
+import { ReactNode } from "react";
 import "./globals.css";
 
 const interFont = Inter({
@@ -31,20 +31,15 @@ const Layout = ({ children }: LayoutProps) => (
     <body>
       <TooltipProvider>
         <NuqsAdapter>
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "calc(var(--spacing) * 72)",
-                "--header-height": "calc(var(--spacing) * 12)",
-              } as CSSProperties
-            }
-          >
+          <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
+            <SidebarInset className="border-sidebar-border rounded-lg border shadow-sm md:my-2">
+              {children}
+            </SidebarInset>
           </SidebarProvider>
         </NuqsAdapter>
       </TooltipProvider>
-      <Toaster />
+      <Toaster richColors />
     </body>
   </html>
 );

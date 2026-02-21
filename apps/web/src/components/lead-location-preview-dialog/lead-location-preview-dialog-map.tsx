@@ -5,15 +5,15 @@ import { useMemo } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import type { LatLngLiteral } from "leaflet";
 
-interface LeadLocationPreviewMapProps {
+interface LeadLocationDialogPreviewMapProps {
   lat: number;
   lng: number;
 }
 
-export const LeadLocationPreviewMap = ({
+export const LeadLocationDialogPreviewMap = ({
   lat,
   lng,
-}: LeadLocationPreviewMapProps) => {
+}: LeadLocationDialogPreviewMapProps) => {
   const center = useMemo<LatLngLiteral>(() => ({ lat, lng }), [lat, lng]);
 
   return (

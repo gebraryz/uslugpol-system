@@ -47,7 +47,7 @@ export const QuerySearchInput = ({
   };
 
   return (
-    <div className="flex min-w-60 flex-col gap-2">
+    <div className="flex w-full flex-col gap-2 md:min-w-60 md:flex-1">
       <Label>{label}</Label>
       <div className="relative">
         <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />

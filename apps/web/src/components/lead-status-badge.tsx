@@ -1,4 +1,7 @@
-import { LEAD_STATUS_LABELS, type LeadStatus } from "@/constants/lead-status";
+import {
+  LEAD_STATUS_LABELS,
+  type LeadStatus,
+} from "@/constants/lead/lead-status";
 import {
   CircleCheckBig,
   CircleDollarSign,

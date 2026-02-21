@@ -3,12 +3,15 @@
 import {
   LEAD_CATEGORIES,
   LEAD_CATEGORIES_LABELS,
-} from "@/constants/lead-categories";
-import { LEAD_CHANNELS, LEAD_CHANNELS_LABELS } from "@/constants/lead-channels";
-import { LEAD_STATUS, LEAD_STATUS_LABELS } from "@/constants/lead-status";
+} from "@/constants/lead/lead-categories";
+import {
+  LEAD_CHANNELS,
+  LEAD_CHANNELS_LABELS,
+} from "@/constants/lead/lead-channels";
+import { LEAD_STATUS, LEAD_STATUS_LABELS } from "@/constants/lead/lead-status";
 import { QuerySearchInput } from "@/features/shared/filters/components/query-search-input";
 import { QuerySelects } from "@/features/shared/filters/components/query-selects";
-import { toQueryOptionsStructure } from "@/features/shared/filters/lib/query-select";
+import { toQueryOptionsStructure } from "@/features/shared/filters/lib/utils";
 
 const FILTER_ITEMS = [
   {
@@ -29,7 +32,7 @@ const FILTER_ITEMS = [
 ];
 
 export const CoreLeadsFilters = () => (
-  <div className="flex flex-wrap gap-3">
+  <div className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
     <QuerySearchInput
       queryKey="id"
       label="ID leada"

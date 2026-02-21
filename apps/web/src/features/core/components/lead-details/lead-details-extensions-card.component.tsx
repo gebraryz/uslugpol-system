@@ -8,7 +8,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { LEAD_CATEGORY_MODULES } from "@/constants/lead-category-modules";
+import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
 import {
   formatDate,
   formatJson,
@@ -16,10 +16,10 @@ import {
   toServiceLabelOrUnknown,
 } from "@/lib/utils";
 import Link from "next/link";
-import type { LeadDetailsLead } from "./lead-details.types";
+import type { CoreLeadDetailsLead } from "./lead-details.types";
 
-interface LeadDetailsExtensionsCardProps {
-  lead: LeadDetailsLead;
+interface CoreLeadDetailsExtensionsCardProps {
+  lead: CoreLeadDetailsLead;
 }
 
 const EXTENSION_FIELD_LABELS = {
@@ -79,9 +79,9 @@ const formatExtensionValue = (key: string, value: unknown): string | null => {
   return null;
 };
 
-export const LeadDetailsExtensionsCard = ({
+export const CoreLeadDetailsExtensionsCard = ({
   lead,
-}: LeadDetailsExtensionsCardProps) => {
+}: CoreLeadDetailsExtensionsCardProps) => {
   const extensionsEmptyState =
     LEAD_CATEGORY_MODULES[lead.category].extensionsEmptyState;
   const cta = extensionsEmptyState.cta;

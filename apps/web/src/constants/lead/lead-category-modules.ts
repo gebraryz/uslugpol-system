@@ -1,5 +1,5 @@
 import { type LeadCategory } from "./lead-categories";
-import { ROUTES } from "./routes";
+import { ROUTES } from "../routes";
 
 type AssignedService = "event_service" | "car_service" | "cleaning_service";
 

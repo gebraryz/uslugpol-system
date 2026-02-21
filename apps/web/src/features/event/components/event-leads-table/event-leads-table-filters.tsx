@@ -1,13 +1,16 @@
 "use client";
 
-import { LEAD_CHANNELS, LEAD_CHANNELS_LABELS } from "@/constants/lead-channels";
+import {
+  LEAD_CHANNELS,
+  LEAD_CHANNELS_LABELS,
+} from "@/constants/lead/lead-channels";
 import { QuerySearchInput } from "@/features/shared/filters/components/query-search-input";
 import { QuerySelects } from "@/features/shared/filters/components/query-selects";
-import { toQueryOptionsStructure } from "@/features/shared/filters/lib/query-select";
 import {
   EVENT_MODULE_STATUS,
   EVENT_MODULE_STATUS_LABELS,
-} from "../constants/module-status";
+} from "../../constants/event-module-status";
+import { toQueryOptionsStructure } from "@/features/shared/filters/lib/utils";
 
 const FILTER_ITEMS = [
   {
@@ -18,12 +21,15 @@ const FILTER_ITEMS = [
   {
     queryKey: "moduleStatus",
     label: "Status modułu",
-    options: toQueryOptionsStructure(EVENT_MODULE_STATUS, EVENT_MODULE_STATUS_LABELS),
+    options: toQueryOptionsStructure(
+      EVENT_MODULE_STATUS,
+      EVENT_MODULE_STATUS_LABELS,
+    ),
   },
 ];
 
-export const EventLeadsFilters = () => (
-  <div className="flex flex-wrap gap-3">
+export const EventLeadsTableFilters = () => (
+  <div className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
     <QuerySearchInput
       queryKey="id"
       label="ID leada"

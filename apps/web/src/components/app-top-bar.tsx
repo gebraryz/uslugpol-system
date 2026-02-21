@@ -13,14 +13,10 @@ interface AppTopBarProps {
 }
 
 export const AppTopBar = ({ breadcrumbs }: AppTopBarProps) => (
-  <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) px-2">
+  <header className="flex border-b items-center p-2 gap-x-2">
     <SidebarTrigger />
     <Breadcrumb>
       <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/">UsługPOL</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
         {breadcrumbs.map((breadcrumb) => (
           <Fragment key={breadcrumb.path}>
             <BreadcrumbItem key={breadcrumb.path}>

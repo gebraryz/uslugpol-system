@@ -1,7 +1,7 @@
 import {
   LEAD_CATEGORIES_LABELS,
   type LeadCategory,
-} from "@/constants/lead-categories";
+} from "@/constants/lead/lead-categories";
 import {
   CalendarDays,
   CarFront,

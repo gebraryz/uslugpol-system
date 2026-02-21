@@ -5,10 +5,10 @@ import { getDb } from "@/lib/db";
 import { updateLeadStatusSchema } from "../schema/update-lead-status";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
-import { LEAD_NEXT_STATUS } from "@/constants/lead-status";
+import { LEAD_NEXT_STATUS } from "@/constants/lead/lead-status";
 import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
 
-export const updateLeadStatusAction = actionClient
+export const updateCoreLeadStatusAction = actionClient
   .inputSchema(updateLeadStatusSchema)
   .action(async ({ parsedInput }) => {
     const { core: db } = getDb();

@@ -1,1 +1,1 @@
-export { LeadDetails } from "./lead-details.component";
+export { CoreLeadDetails } from "./lead-details.component";
