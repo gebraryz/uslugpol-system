@@ -5,31 +5,20 @@ import { LeadChannelBadge } from "@/components/lead-channel-badge";
 import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
 import { LeadStatusBadge } from "@/components/lead-status-badge";
 import { TableIdCell } from "@/components/table-id-cell";
-import { buttonVariants } from "@/components/ui/button";
-import { ROUTES } from "@/constants/routes";
 import { PaginationControls } from "@/features/shared/filters/components/pagination-controls";
 import { formatDate } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { ExternalLink } from "lucide-react";
-import Link from "next/link";
-import type { GetEventLeadsResult } from "../../queries/get-event-leads";
-import { EventEnrichmentStatusBadge } from "../event-enrichment-status-badge";
-import { isEventLeadEnriched } from "../../lib/utils";
+import type { CarLead } from "../../queries/get-car-leads";
 
-type EventLeadRow = GetEventLeadsResult["leads"][number];
-
-const COLUMNS: ColumnDef<EventLeadRow>[] = [
+const COLUMNS: ColumnDef<CarLead>[] = [
   {
     accessorKey: "leadId",
     header: "ID",
     cell: ({ row }) => {
       const leadId = row.original.leadId;
+
       return (
-        <TableIdCell
-          id={leadId}
-          href={ROUTES.events.leadDetails(leadId)}
-          copyLabel="Kopiuj pełne ID leada"
-        />
+        <TableIdCell id={leadId} copyLabel="Kopiuj pełne ID leada" />
       );
     },
   },
@@ -67,43 +56,22 @@ const COLUMNS: ColumnDef<EventLeadRow>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status leada",
+    header: "Status",
     cell: ({ row }) => <LeadStatusBadge status={row.original.status} />,
-  },
-  {
-    accessorKey: "enrichmentStatus",
-    header: "Status obsługi",
-    cell: ({ row }) => (
-      <EventEnrichmentStatusBadge
-        isEnriched={isEventLeadEnriched(row.original.details)}
-      />
-    ),
-  },
-  {
-    accessorKey: "details",
-    header: "",
-    cell: ({ row }) => (
-      <Link
-        href={ROUTES.events.leadDetails(row.original.leadId)}
-        className={buttonVariants({ variant: "ghost" })}
-      >
-        <ExternalLink />
-      </Link>
-    ),
   },
 ];
 
-interface EventLeadsTableProps {
-  data: EventLeadRow[];
+interface CarLeadsTableProps {
+  data: CarLead[];
   page: number;
   totalPages: number;
 }
 
-export const EventLeadsTable = ({
+export const CarLeadsTable = ({
   data,
   page,
   totalPages,
-}: EventLeadsTableProps) => (
+}: CarLeadsTableProps) => (
   <div>
     <DataTable columns={COLUMNS} data={data} />
     <PaginationControls page={page} totalPages={totalPages} />

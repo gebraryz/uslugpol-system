@@ -10,7 +10,9 @@ export const ROUTES = {
   },
 
   vehicles: {
-    rental: "/samochody",
+    index: "/samochody",
+    leads: "/samochody/leady",
+    recommendations: "/samochody/rekomendacje",
   },
 
   cleaning: {

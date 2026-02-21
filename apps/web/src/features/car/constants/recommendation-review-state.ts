@@ -9,7 +9,4 @@ export type CarRecommendationReviewState =
 export const CAR_RECOMMENDATION_REVIEW_STATE_LABELS: Record<
   CarRecommendationReviewState,
   string
-> = {
-  UNREVIEWED: "Do rozpatrzenia",
-  REVIEWED: "Rozpatrzone",
-};
+> = { UNREVIEWED: "Do rozpatrzenia", REVIEWED: "Rozpatrzone" };

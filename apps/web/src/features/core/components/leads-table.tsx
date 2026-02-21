@@ -5,22 +5,17 @@ import { LeadCategoryBadge } from "@/components/lead-category-badge";
 import { LeadChannelBadge } from "@/components/lead-channel-badge";
 import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
 import { LeadStatusBadge } from "@/components/lead-status-badge";
+import { TableIdCell } from "@/components/table-id-cell";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { LEAD_CATEGORIES_LABELS } from "@/constants/lead/lead-categories";
 import { LEAD_CHANNELS_LABELS } from "@/constants/lead/lead-channels";
 import { ROUTES } from "@/constants/routes";
 import { PaginationControls } from "@/features/shared/filters/components/pagination-controls";
-import { formatDate, formatId } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import type { GetLeadsResult } from "../queries/get-leads";
-import { CopyToClipboardButton } from "./copy-to-clipboard-button";
 
 type LeadRow = GetLeadsResult["leads"][number];
 
@@ -32,21 +27,11 @@ const COLUMNS: ColumnDef<LeadRow>[] = [
       const id = row.original.id;
 
       return (
-        <div className="flex items-center gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href={ROUTES.core.leadDetails(id)}
-                className="font-mono text-sm underline-offset-2 hover:underline"
-              >
-                {formatId(id)}
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>{id}</TooltipContent>
-          </Tooltip>
-
-          <CopyToClipboardButton value={id} label="Kopiuj pełne ID" />
-        </div>
+        <TableIdCell
+          id={id}
+          href={ROUTES.core.leadDetails(id)}
+          copyLabel="Kopiuj pełne ID"
+        />
       );
     },
   },

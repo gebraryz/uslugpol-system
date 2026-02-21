@@ -114,6 +114,7 @@ model CrossSellOpportunity {
 
   @@index([leadId, status])
   @@index([targetService, status])
+  @@unique([leadId, targetService, source, ruleKey])
   @@map("cross_sell_opportunities")
   @@schema("core")
 }

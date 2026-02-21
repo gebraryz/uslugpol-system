@@ -72,12 +72,10 @@ export const EventEnrichmentForm = ({
       actionProps: {
         onSuccess: ({ data }) => {
           if (data.sentToCore) {
-            toast.success(
-              "Dane wydarzenia zostały zapisane i wysłane do Centrum",
-            );
+            toast.success("Dane wydarzenia zostały zapisane");
           } else {
             toast.warning(
-              "Dane zapisane lokalnie, ale nie zostały wysłane do Centrum",
+              "Dane zapisane, ale nie zostały jeszcze przekazane",
             );
           }
         },
@@ -181,7 +179,7 @@ export const EventEnrichmentForm = ({
       ) : null}
 
       <Button type="submit" loading={isPending} disabled={isPending}>
-        Zapisz i wyślij wzbogacenie
+        Zapisz dane wydarzenia
       </Button>
     </form>
   );

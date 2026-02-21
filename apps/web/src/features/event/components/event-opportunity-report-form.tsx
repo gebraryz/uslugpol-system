@@ -44,10 +44,10 @@ export const EventOpportunityReportForm = ({
       actionProps: {
         onSuccess: ({ data }) => {
           if (data.sentToCore) {
-            toast.success("Okazja została zgłoszona do Centrum");
+            toast.success("Okazja została zgłoszona");
           } else {
             toast.warning(
-              "Okazja zapisana lokalnie, ale nie została wysłana do Centrum",
+              "Okazja zapisana, ale nie została jeszcze przekazana",
             );
           }
         },
@@ -118,7 +118,7 @@ export const EventOpportunityReportForm = ({
       </FieldSet>
 
       <FieldDescription>
-        Zgłoszenie trafi do Centrum jako informacja o okazji.
+        Zgłoszenie zostanie zapisane jako dodatkowa okazja sprzedażowa.
       </FieldDescription>
 
       <Button type="submit" loading={isPending} disabled={!canSubmit}>

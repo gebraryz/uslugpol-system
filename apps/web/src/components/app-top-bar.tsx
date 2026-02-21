@@ -18,8 +18,8 @@ export const AppTopBar = ({ breadcrumbs }: AppTopBarProps) => (
     <Breadcrumb>
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb) => (
-          <Fragment key={breadcrumb.path}>
-            <BreadcrumbItem key={breadcrumb.path}>
+          <Fragment key={`${breadcrumb.path}-${breadcrumb.name}`}>
+            <BreadcrumbItem>
               <BreadcrumbLink href={breadcrumb.path}>
                 {breadcrumb.name}
               </BreadcrumbLink>

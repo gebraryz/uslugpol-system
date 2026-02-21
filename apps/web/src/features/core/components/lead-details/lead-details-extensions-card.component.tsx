@@ -8,14 +8,17 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { ACCESS_CONTEXTS } from "@/constants/access-context";
 import { LEAD_CATEGORY_MODULES } from "@/constants/lead/lead-category-modules";
+import { ROUTES } from "@/constants/routes";
+import { setAccessContextCookie } from "@/lib/access-context";
 import {
   formatDate,
   formatJson,
   isObjectRecord,
   toServiceLabelOrUnknown,
 } from "@/lib/utils";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { CoreLeadDetailsLead } from "./lead-details.types";
 
 interface CoreLeadDetailsExtensionsCardProps {
@@ -79,6 +82,30 @@ const formatExtensionValue = (key: string, value: unknown): string | null => {
   return null;
 };
 
+const isNonCoreAccessContext = (
+  value: FormDataEntryValue | null,
+): value is Exclude<(typeof ACCESS_CONTEXTS)[number], "core"> =>
+  typeof value === "string" &&
+  value !== "core" &&
+  (ACCESS_CONTEXTS as readonly string[]).includes(value);
+
+const isSafePath = (value: FormDataEntryValue | null): value is string =>
+  typeof value === "string" && value.startsWith("/") && !value.startsWith("//");
+
+const switchContextAndRedirect = async (formData: FormData) => {
+  "use server";
+
+  const context = formData.get("context");
+  const href = formData.get("href");
+
+  if (!isNonCoreAccessContext(context) || !isSafePath(href)) {
+    redirect(ROUTES.core.leads);
+  }
+
+  await setAccessContextCookie(context);
+  redirect(href);
+};
+
 export const CoreLeadDetailsExtensionsCard = ({
   lead,
 }: CoreLeadDetailsExtensionsCardProps) => {
@@ -102,12 +129,16 @@ export const CoreLeadDetailsExtensionsCard = ({
             </EmptyHeader>
             {cta ? (
               <EmptyContent>
-                <Link
-                  href={cta.href(lead.id)}
-                  className={buttonVariants({ variant: "outline" })}
-                >
-                  {cta.label}
-                </Link>
+                <form action={switchContextAndRedirect}>
+                  <input type="hidden" name="context" value={cta.context} />
+                  <input type="hidden" name="href" value={cta.href(lead.id)} />
+                  <button
+                    type="submit"
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    {cta.label}
+                  </button>
+                </form>
               </EmptyContent>
             ) : null}
           </Empty>

@@ -30,7 +30,7 @@ export const reportOpportunityAction = actionClientWithAccess(["event"])
     });
 
     if (!lead) {
-      throw new ActionError("Lead nie istnieje w module wydarzeń", 404);
+      throw new ActionError("Lead nie istnieje w obszarze wydarzeń", 404);
     }
 
     const correlationId = crypto.randomUUID();

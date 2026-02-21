@@ -2,24 +2,18 @@
 
 import { DataTable } from "@/components/data-table";
 import { LeadLocationDialogPreview } from "@/components/lead-location-preview-dialog";
+import { TableIdCell } from "@/components/table-id-cell";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { CopyToClipboardButton } from "@/features/core/components/copy-to-clipboard-button";
 import { PaginationControls } from "@/features/shared/filters/components/pagination-controls";
 import {
   formatDate,
-  formatId,
   isObjectRecord,
   statusBadgeVariant,
   toCrossSellRuleLabel,
   toCrossSellStatusLabel,
 } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import type { CarRecommendation } from "../queries/get-car-recommendations";
+import type { CarRecommendation } from "../../queries/get-car-recommendations";
 import { CarRecommendationDecisionActions } from "./car-recommendation-decision-actions";
 
 const readSnapshotLocation = (context: unknown) => {
@@ -48,17 +42,7 @@ const COLUMNS: ColumnDef<CarRecommendation>[] = [
     header: "Lead",
     cell: ({ row }) => {
       const leadId = row.original.leadId;
-      return (
-        <div className="flex items-center gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="font-mono text-sm">{formatId(leadId)}</span>
-            </TooltipTrigger>
-            <TooltipContent>{leadId}</TooltipContent>
-          </Tooltip>
-          <CopyToClipboardButton value={leadId} label="Kopiuj ID leada" />
-        </div>
-      );
+      return <TableIdCell id={leadId} copyLabel="Kopiuj ID leada" />;
     },
   },
   {
@@ -83,7 +67,11 @@ const COLUMNS: ColumnDef<CarRecommendation>[] = [
       if (!location) return "Brak";
 
       return (
-        <LeadLocationDialogPreview lat={location.lat} lng={location.lng} showLabel />
+        <LeadLocationDialogPreview
+          lat={location.lat}
+          lng={location.lng}
+          showLabel
+        />
       );
     },
   },

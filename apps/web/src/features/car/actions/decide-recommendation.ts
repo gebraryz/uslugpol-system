@@ -76,7 +76,7 @@ export const decideCarRecommendationAction = actionClientWithAccess(["car"])
       }
     }
 
-    revalidatePath(ROUTES.vehicles.rental);
+    revalidatePath(ROUTES.vehicles.recommendations);
     revalidatePath(ROUTES.core.leadDetails(recommendation.leadId));
 
     return {

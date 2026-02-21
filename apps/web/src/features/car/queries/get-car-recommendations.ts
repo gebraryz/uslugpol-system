@@ -7,7 +7,7 @@ import type { Prisma as CarPrisma } from "@uslugpol/car-service";
 import { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
 import { requireAccessContext } from "@/lib/access-context";
 
-interface CarRecommendationsFilters {
+interface CarRecommendationsTableFilters {
   id?: string | null;
   ruleKey?: CrossSellRuleKey | null;
   status?: CrossSellStatus | null;
@@ -26,7 +26,7 @@ export const getCarRecommendations = async ({
   ruleKey,
   status,
   reviewState,
-}: PaginationParams & CarRecommendationsFilters) => {
+}: PaginationParams & CarRecommendationsTableFilters) => {
   await requireAccessContext(["car"]);
 
   const { car: db } = getDb();

@@ -17,7 +17,7 @@ export const ACCESS_CONTEXT_LABELS: Record<AccessContext, string> = {
 export const ACCESS_CONTEXT_DEFAULT_ROUTE: Record<AccessContext, string> = {
   core: ROUTES.core.leads,
   event: ROUTES.events.leads,
-  car: ROUTES.vehicles.rental,
+  car: ROUTES.vehicles.leads,
   cleaning: ROUTES.cleaning.index,
 };
 

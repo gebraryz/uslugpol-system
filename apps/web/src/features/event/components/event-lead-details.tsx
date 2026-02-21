@@ -49,7 +49,7 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
       <Card>
         <CardHeader className="space-y-4">
           <div>
-            <CardDescription>ID leada (z Centrum)</CardDescription>
+            <CardDescription>ID zgłoszenia</CardDescription>
             <div className="flex items-center gap-1">
               <code className="font-mono text-sm">{lead.leadId}</code>
               <CopyToClipboardButton
@@ -63,17 +63,17 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
             <LeadChannelBadge channel={lead.channel} />
             <span className="text-muted-foreground text-sm">Status leada:</span>
             <LeadStatusBadge status={lead.status} />
-            <span className="text-muted-foreground text-sm">Status modułu:</span>
+            <span className="text-muted-foreground text-sm">Status obsługi:</span>
             <EventEnrichmentStatusBadge isEnriched={isEnriched} />
           </div>
         </CardHeader>
         <CardContent className="grid gap-3 text-sm md:grid-cols-2">
           <div>
-            <p className="text-muted-foreground">Odebrano w module</p>
+            <p className="text-muted-foreground">Data przyjęcia</p>
             <p>{formatDate(lead.receivedAt)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Zaktualizowano w module</p>
+            <p className="text-muted-foreground">Ostatnia aktualizacja</p>
             <p>{formatDate(lead.updatedAt)}</p>
           </div>
         </CardContent>
@@ -81,9 +81,9 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Snapshot z Centrum</CardTitle>
+          <CardTitle>Dane zgłoszenia</CardTitle>
           <CardDescription>
-            Dane, które moduł Wydarzenia otrzymał po przypisaniu leada.
+            Dane przekazane na początku obsługi tego zgłoszenia.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -99,7 +99,7 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
         <CardHeader>
           <CardTitle>Wzbogacenie wydarzenia</CardTitle>
           <CardDescription>
-            Uzupełnij dane i opublikuj zdarzenie `LeadEnriched` do Centrum.
+            Uzupełnij szczegóły wydarzenia i zapisz zmiany.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -122,7 +122,7 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Rekomendacje cross-sell z Centrum</CardTitle>
+          <CardTitle>Propozycje usług dodatkowych</CardTitle>
         </CardHeader>
         <CardContent>
           {lead.proposals.length === 0 ? (
@@ -130,8 +130,8 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
               <EmptyHeader>
                 <EmptyTitle>Brak rekomendacji</EmptyTitle>
                 <EmptyDescription>
-                  Centrum nie przekazało jeszcze propozycji cross-sell dla tego
-                  leada.
+                  Dla tego zgłoszenia nie ma jeszcze propozycji usług
+                  dodatkowych.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -168,8 +168,8 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
         <CardHeader>
           <CardTitle>Zgłoś okazję</CardTitle>
           <CardDescription>
-            Opcjonalny feedback do Centrum, np. potrzeba transportu lub
-            sprzątania.
+            Opcjonalnie zgłoś dodatkową potrzebę klienta, np. transport lub
+            sprzątanie.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -201,9 +201,7 @@ export const EventLeadDetails = ({ data }: EventLeadDetailsProps) => {
                         <Badge
                           variant={report.sentToCore ? "default" : "outline"}
                         >
-                          {report.sentToCore
-                            ? "Wysłane do Centrum"
-                            : "W kolejce"}
+                          {report.sentToCore ? "Przekazane" : "Oczekuje"}
                         </Badge>
                       </TableCell>
                     </TableRow>

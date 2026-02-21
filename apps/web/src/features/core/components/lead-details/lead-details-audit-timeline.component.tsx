@@ -95,7 +95,7 @@ const summarize = (
         title: toAuditEventLabel(event.eventType),
         subtitle: decisionLabel
           ? `Decyzja: ${decisionLabel}`
-          : "Zmiana decyzji modułu",
+          : "Zmiana decyzji zespołu",
       };
     }
 
@@ -116,20 +116,20 @@ const summarize = (
     const service = payload?.assignedService;
     const serviceLabel = toServiceTargetLabel(service);
 
-    return {
-      icon: IconPinned,
-      title: toAuditEventLabel(event.eventType),
-      subtitle: serviceLabel
-        ? `Przypisano do: ${serviceLabel}`
-        : "Przypisanie do modułu",
-    };
+      return {
+        icon: IconPinned,
+        title: toAuditEventLabel(event.eventType),
+        subtitle: serviceLabel
+          ? `Przypisano do: ${serviceLabel}`
+          : "Przypisanie do obszaru",
+      };
   }
 
   if (group === "enriched") {
     return {
       icon: IconPuzzle,
       title: toAuditEventLabel(event.eventType),
-      subtitle: "Dodano dane z modułu usługowego",
+      subtitle: "Dodano dane uzupełniające",
     };
   }
 
@@ -137,14 +137,14 @@ const summarize = (
     return {
       icon: IconSpeakerphone,
       title: toAuditEventLabel(event.eventType),
-      subtitle: "Informacja zwrotna z modułu",
+      subtitle: "Informacja zwrotna od zespołu",
     };
   }
 
   return {
     icon: IconDots,
     title: toAuditEventLabel(event.eventType),
-    subtitle: "Zdarzenie techniczne",
+    subtitle: "Inne zdarzenie",
   };
 };
 

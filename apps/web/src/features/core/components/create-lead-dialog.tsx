@@ -51,7 +51,7 @@ export const CreateCoreLeadDialog = () => {
 
         if (data?.dispatchedToModule === false) {
           toast.warning(
-            "Lead został utworzony, ale nie został przekazany do modułu docelowego",
+            "Lead został utworzony, ale nie został przekazany do odpowiedniego zespołu",
           );
         } else {
           toast.success("Lead został utworzony");

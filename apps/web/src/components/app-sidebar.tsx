@@ -10,6 +10,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
@@ -41,9 +44,19 @@ const NAVIGATION_ITEMS = [
   },
   {
     name: "Wynajem aut",
-    path: ROUTES.vehicles.rental,
+    path: ROUTES.vehicles.index,
     context: "car",
     icon: IconCar,
+    children: [
+      {
+        name: "Leady",
+        path: ROUTES.vehicles.leads,
+      },
+      {
+        name: "Rekomendacje",
+        path: ROUTES.vehicles.recommendations,
+      },
+    ],
   },
   {
     name: "Sprzątanie",
@@ -58,11 +71,15 @@ const NAVIGATION_ITEMS = [
   context: AccessContext;
   icon: React.ComponentType<{ size?: number; stroke?: number }>;
   badge?: string;
+  children?: {
+    name: string;
+    path: string;
+  }[];
 }[];
 
 const MODULE_PATHS = [
   ROUTES.events.leads,
-  ROUTES.vehicles.rental,
+  ROUTES.vehicles.index,
   ROUTES.cleaning.index,
 ];
 
@@ -112,42 +129,87 @@ export const AppSidebar = ({ initialAccessContext }: AppSidebarProps) => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton
-                    asChild
-                    size="lg"
-                    isActive={isActiveItem(item.path)}
-                  >
-                    <Link
-                      href={item.path}
-                      className="flex items-center gap-3"
-                      onClick={() => {
-                        if (isMobile) {
-                          setOpenMobile(false);
-                        }
-                      }}
-                    >
-                      <item.icon size={22} stroke={1.5} />
-                      <span className="text-base font-medium">{item.name}</span>
-                      {item.badge ? (
-                        <Badge
-                          variant="outline"
-                          className="ml-auto text-[10px]"
+              {visibleItems.map((item) => {
+                const itemActive = isActiveItem(item.path);
+
+                return (
+                  <SidebarMenuItem key={item.path}>
+                    {item.children ? (
+                      <>
+                        <SidebarMenuButton
+                          size="lg"
+                          isActive={itemActive}
+                          className={itemActive ? "font-semibold" : undefined}
                         >
-                          {item.badge}
-                        </Badge>
-                      ) : null}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                          <item.icon size={22} stroke={1.5} />
+                          <span className="text-base font-medium">{item.name}</span>
+                        </SidebarMenuButton>
+
+                        <SidebarMenuSub>
+                          {item.children.map((child) => {
+                            const childActive = isActiveItem(child.path);
+
+                            return (
+                              <SidebarMenuSubItem key={child.path}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={childActive}
+                                  className={childActive ? "font-semibold" : undefined}
+                                >
+                                  <Link
+                                    href={child.path}
+                                    onClick={() => {
+                                      if (isMobile) {
+                                        setOpenMobile(false);
+                                      }
+                                    }}
+                                  >
+                                    <span>{child.name}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            );
+                          })}
+                        </SidebarMenuSub>
+                      </>
+                    ) : (
+                      <SidebarMenuButton
+                        asChild
+                        size="lg"
+                        isActive={itemActive}
+                        className={itemActive ? "font-semibold" : undefined}
+                      >
+                        <Link
+                          href={item.path}
+                          className="flex items-center gap-3"
+                          onClick={() => {
+                            if (isMobile) {
+                              setOpenMobile(false);
+                            }
+                          }}
+                        >
+                          <item.icon size={22} stroke={1.5} />
+                          <span className="text-base font-medium">{item.name}</span>
+                          {item.badge ? (
+                            <Badge
+                              variant="outline"
+                              className="ml-auto text-[10px]"
+                            >
+                              {item.badge}
+                            </Badge>
+                          ) : null}
+                        </Link>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="bg-sidebar sticky bottom-0 z-10 mt-auto border-t border-sidebar-border">
+      <SidebarFooter className="mt-auto border-t border-sidebar-border bg-white">
         <AccessContextSwitcher initialContext={initialAccessContext} />
       </SidebarFooter>
     </Sidebar>

@@ -12,7 +12,7 @@ import { toCrossSellRuleLabel } from "@/lib/utils";
 import {
   CAR_RECOMMENDATION_REVIEW_STATES,
   CAR_RECOMMENDATION_REVIEW_STATE_LABELS,
-} from "../constants/recommendation-review-state";
+} from "../../constants/recommendation-review-state";
 
 const FILTER_ITEMS = [
   {
@@ -26,7 +26,10 @@ const FILTER_ITEMS = [
   {
     queryKey: "status",
     label: "Status",
-    options: toQueryOptionsStructure(CROSS_SELL_STATUSES, CROSS_SELL_STATUS_LABELS),
+    options: toQueryOptionsStructure(
+      CROSS_SELL_STATUSES,
+      CROSS_SELL_STATUS_LABELS,
+    ),
   },
   {
     queryKey: "reviewState",
@@ -38,7 +41,7 @@ const FILTER_ITEMS = [
   },
 ];
 
-export const CarRecommendationsFilters = () => (
+export const CarRecommendationsTableFilters = () => (
   <div className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
     <QuerySearchInput
       queryKey="id"

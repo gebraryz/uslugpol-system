@@ -17,6 +17,15 @@ type AppEvent<Key extends AppEventType> = EventEnvelope<Key, AppEventMap[Key]>;
 type CoreDependencies = { db: PrismaClient; eventBus: AppEventBus };
 type CrossSellProposedPayload = AppEventMap["core.crosssell.proposed.v1"];
 type CrossSellSnapshot = CrossSellProposedPayload["snapshot"];
+type EventDistanceRuleLead = {
+  leadId: string;
+  category: LeadType;
+  description: string;
+  lat: number;
+  lng: number;
+  channel: LeadChannel;
+  createdAt: Date;
+};
 
 type LeadTargetType = Exclude<LeadType, "EVENT">;
 
@@ -204,6 +213,80 @@ const createAndPublishCrossSellOpportunity = async (
   return opportunity;
 };
 
+const proposeEventDistanceCrossSell = async (
+  dependencies: CoreDependencies,
+  params: EventDistanceRuleLead & {
+    correlationId?: string;
+    causationId?: string;
+  },
+) => {
+  const { db } = dependencies;
+  if (params.category !== "EVENT") return;
+
+  const distanceKm = haversineDistanceKm(
+    CROSS_SELL_EVENT_DISTANCE_RULE.referencePoint,
+    { lat: params.lat, lng: params.lng },
+  );
+
+  if (distanceKm <= CROSS_SELL_EVENT_DISTANCE_RULE.thresholdKm) return;
+
+  const existingRuleOpportunity = await db.crossSellOpportunity.findFirst({
+    where: {
+      leadId: params.leadId,
+      targetService: "CAR",
+      source: "RULE_ENGINE",
+      ruleKey: CROSS_SELL_EVENT_DISTANCE_RULE.key,
+    },
+    select: { id: true },
+  });
+
+  if (existingRuleOpportunity) return;
+
+  const roundedDistanceKm = Number(distanceKm.toFixed(1));
+
+  await createAndPublishCrossSellOpportunity(dependencies, {
+    leadId: params.leadId,
+    leadCategory: params.category,
+    targetService: "CAR",
+    source: "RULE_ENGINE",
+    reason: `Wydarzenie oddalone o ${roundedDistanceKm} km od centrum operacyjnego.`,
+    ruleKey: CROSS_SELL_EVENT_DISTANCE_RULE.key,
+    context: {
+      distanceKm: roundedDistanceKm,
+      thresholdKm: CROSS_SELL_EVENT_DISTANCE_RULE.thresholdKm,
+      referenceLocation: CROSS_SELL_EVENT_DISTANCE_RULE.referenceLabel,
+    },
+    snapshot: toCrossSellSnapshot({
+      description: params.description,
+      lat: params.lat,
+      lng: params.lng,
+      channel: params.channel,
+      createdAt: params.createdAt,
+    }),
+    correlationId: params.correlationId,
+    causationId: params.causationId,
+  });
+};
+
+const handleLeadCreated = async (
+  dependencies: CoreDependencies,
+  event: AppEvent<"core.lead.created.v1">,
+) => {
+  const { lead, correlationId } = event.payload;
+
+  await proposeEventDistanceCrossSell(dependencies, {
+    leadId: lead.id,
+    category: lead.category,
+    description: lead.description,
+    lat: lead.location.lat,
+    lng: lead.location.lng,
+    channel: lead.channel,
+    createdAt: new Date(lead.createdAt),
+    correlationId,
+    causationId: event.id,
+  });
+};
+
 const handleLeadEnriched = async (
   dependencies: CoreDependencies,
   event: AppEvent<"event.lead.enriched.v1">,
@@ -249,41 +332,16 @@ const handleLeadEnriched = async (
     },
   });
 
-  if (!lead || lead.category !== "EVENT") return;
+  if (!lead) return;
 
-  const distanceKm = haversineDistanceKm(
-    CROSS_SELL_EVENT_DISTANCE_RULE.referencePoint,
-    { lat: lead.lat, lng: lead.lng },
-  );
-
-  if (distanceKm <= CROSS_SELL_EVENT_DISTANCE_RULE.thresholdKm) return;
-
-  const existingRuleOpportunity = await db.crossSellOpportunity.findFirst({
-    where: {
-      leadId,
-      targetService: "CAR",
-      source: "RULE_ENGINE",
-      ruleKey: CROSS_SELL_EVENT_DISTANCE_RULE.key,
-    },
-    select: { id: true },
-  });
-
-  if (existingRuleOpportunity) return;
-
-  const roundedDistanceKm = Number(distanceKm.toFixed(1));
-  await createAndPublishCrossSellOpportunity(dependencies, {
+  await proposeEventDistanceCrossSell(dependencies, {
     leadId,
-    leadCategory: lead.category,
-    targetService: "CAR",
-    source: "RULE_ENGINE",
-    reason: `Wydarzenie oddalone o ${roundedDistanceKm} km od centrum operacyjnego.`,
-    ruleKey: CROSS_SELL_EVENT_DISTANCE_RULE.key,
-    context: {
-      distanceKm: roundedDistanceKm,
-      thresholdKm: CROSS_SELL_EVENT_DISTANCE_RULE.thresholdKm,
-      referenceLocation: CROSS_SELL_EVENT_DISTANCE_RULE.referenceLabel,
-    },
-    snapshot: toCrossSellSnapshot(lead),
+    category: lead.category,
+    description: lead.description,
+    lat: lead.lat,
+    lng: lead.lng,
+    channel: lead.channel,
+    createdAt: lead.createdAt,
     correlationId,
     causationId: event.id,
   });
@@ -418,6 +476,9 @@ export const registerCoreHandlers = (
   eventBus: AppEventBus,
   dependencies: CoreDependencies,
 ) => {
+  eventBus.subscribe("core.lead.created.v1", (event) =>
+    handleLeadCreated(dependencies, event),
+  );
   eventBus.subscribe("event.lead.enriched.v1", (event) =>
     handleLeadEnriched(dependencies, event),
   );
