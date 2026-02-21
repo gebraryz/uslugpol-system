@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "test": "vitest run test",
     "db:migrate": "turbo run db:migrate --concurrency=1 --filter=@uslugpol/core --filter=@uslugpol/event-service --filter=@uslugpol/car-service",
     "db:migrate:deploy": "turbo run db:migrate:deploy --concurrency=1 --filter=@uslugpol/core --filter=@uslugpol/event-service --filter=@uslugpol/car-service",
     "db:generate": "turbo run db:generate --concurrency=1 --filter=@uslugpol/core --filter=@uslugpol/event-service --filter=@uslugpol/car-service",
@@ -21,7 +22,8 @@
     "prettier": "^3.7.4",
     "prisma": "^7.4.0",
     "turbo": "^2.8.10",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {

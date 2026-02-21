@@ -93,10 +93,7 @@ export const getCarRecommendations = async ({
     },
   });
 
-  return {
-    recommendations,
-    ...pagination,
-  };
+  return { recommendations, ...pagination };
 };
 
 export type CarRecommendationsResult = Awaited<
