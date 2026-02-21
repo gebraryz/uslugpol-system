@@ -5,10 +5,11 @@ import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { decideCarRecommendationAction } from "../actions/decide-recommendation";
+import type { CrossSellDecisionStatus } from "@uslugpol/car-service/enums";
 
 interface CarRecommendationDecisionActionsProps {
   recommendationId: string;
-  status: "PENDING" | "ACCEPTED" | "DECLINED";
+  status: CrossSellDecisionStatus;
 }
 
 export const CarRecommendationDecisionActions = ({

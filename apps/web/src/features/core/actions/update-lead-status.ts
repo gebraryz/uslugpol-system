@@ -7,11 +7,15 @@ import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/constants/routes";
 import { LEAD_NEXT_STATUS } from "@/constants/lead/lead-status";
 import { AUDIT_EVENT_TYPES } from "@/constants/audit-events";
+import { getEventBus } from "@/lib/event-bus";
+import crypto from "node:crypto";
 
 export const updateCoreLeadStatusAction = actionClient
   .inputSchema(updateLeadStatusSchema)
   .action(async ({ parsedInput }) => {
     const { core: db } = getDb();
+    const correlationId = crypto.randomUUID();
+    const changedAt = new Date().toISOString();
     const lead = await db.lead.findUnique({
       where: { id: parsedInput.leadId },
       select: { id: true, status: true },
@@ -42,10 +46,37 @@ export const updateCoreLeadStatusAction = actionClient
           payload: {
             from: lead.status,
             to: parsedInput.status,
+            changedAt,
+            correlationId,
           },
+          correlationId,
         },
       });
     });
+
+    try {
+      await getEventBus().publish({
+        id: crypto.randomUUID(),
+        type: AUDIT_EVENT_TYPES.LEAD_STATUS_CHANGED,
+        occurredAt: changedAt,
+        actorService: "core",
+        aggregateId: parsedInput.leadId,
+        correlationId,
+        payload: {
+          leadId: parsedInput.leadId,
+          from: lead.status,
+          to: parsedInput.status,
+          changedAt,
+          correlationId,
+        },
+      });
+    } catch (error) {
+      console.error("Lead status updated, but status-change event failed", {
+        leadId: parsedInput.leadId,
+        correlationId,
+        error,
+      });
+    }
 
     revalidatePath(`${ROUTES.core.leads}/${parsedInput.leadId}`);
     revalidatePath(ROUTES.core.leads);

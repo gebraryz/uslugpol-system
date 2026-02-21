@@ -286,7 +286,17 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      '@prisma/adapter-pg':
+        specifier: ^7.4.0
+        version: 7.4.0
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
+      pg:
+        specifier: ^8.18.0
+        version: 8.18.0
 
 packages:
 

@@ -8,6 +8,16 @@ import { ActionError, actionClient } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import crypto from "node:crypto";
 import { reportOpportunitySchema } from "../schema/report-opportunity";
+import type { AppEventMap } from "@uslugpol/shared/event-bus";
+import type { CrossSellTargetService as EventModuleTargetService } from "@uslugpol/event-service/enums";
+
+const TARGET_SERVICE_TO_CORE = {
+  CAR: "car_service",
+  CLEANING: "cleaning_service",
+} as const satisfies Record<
+  EventModuleTargetService,
+  AppEventMap["event.opportunity.reported.v1"]["targetService"]
+>;
 
 export const reportOpportunityAction = actionClient
   .inputSchema(reportOpportunitySchema)
@@ -25,8 +35,7 @@ export const reportOpportunityAction = actionClient
 
     const correlationId = crypto.randomUUID();
     const reportedAt = new Date().toISOString();
-    const targetService =
-      parsedInput.targetService === "CAR" ? "car_service" : "cleaning_service";
+    const targetService = TARGET_SERVICE_TO_CORE[parsedInput.targetService];
 
     const report = await db.opportunityReport.create({
       data: {

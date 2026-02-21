@@ -34,9 +34,6 @@ interface EventEnrichmentFormProps {
   } | null;
 }
 
-const toDateInput = (date: Date | null) =>
-  date ? new Date(date).toISOString().slice(0, 10) : undefined;
-
 type OutdoorSelectValue = "unknown" | "true" | "false";
 
 const toOutdoorSelectValue = (
@@ -50,13 +47,15 @@ const toOutdoorSelectValue = (
 const fromOutdoorSelectValue = (value: OutdoorSelectValue): boolean | null => {
   if (value === "true") return true;
   if (value === "false") return false;
+
   return null;
 };
 
-const toNullableInt = (value: string): number | null => {
-  if (value.trim() === "") return null;
-  return Number(value);
-};
+const toDateInput = (date: Date | null) =>
+  date ? new Date(date).toISOString().slice(0, 10) : undefined;
+
+const toNullableInt = (value: string): number | null =>
+  value.trim() === "" ? null : Number(value);
 
 export const EventEnrichmentForm = ({
   leadId,
@@ -158,9 +157,7 @@ export const EventEnrichmentForm = ({
               form.setValue(
                 "isOutdoor",
                 fromOutdoorSelectValue(value as OutdoorSelectValue),
-                {
-                  shouldDirty: true,
-                },
+                { shouldDirty: true },
               );
             }}
           >

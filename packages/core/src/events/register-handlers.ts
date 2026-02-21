@@ -345,7 +345,7 @@ const handleCrossSellDecision = async (
   dependencies: CoreDependencies,
   event: AppEvent<"service.cross_sell.decision.v1">,
 ) => {
-  const { db } = dependencies;
+  const { db, eventBus } = dependencies;
   const {
     opportunityId,
     decision,
@@ -354,7 +354,14 @@ const handleCrossSellDecision = async (
     targetService,
   } = event.payload;
 
-  await db.crossSellOpportunity.updateMany({
+  const opportunity = await db.crossSellOpportunity.findUnique({
+    where: { id: opportunityId },
+    select: { id: true, leadId: true, status: true },
+  });
+
+  if (!opportunity) return;
+
+  await db.crossSellOpportunity.update({
     where: { id: opportunityId },
     data: {
       status: decision,
@@ -367,8 +374,41 @@ const handleCrossSellDecision = async (
     eventType: event.type,
     entityType: "CrossSellOpportunity",
     entityId: opportunityId,
-    leadId: null,
+    leadId: opportunity.leadId,
     payload: event.payload,
+    correlationId,
+    causationId: event.id,
+  });
+
+  if (opportunity.status === decision) return;
+
+  const changedAt = new Date().toISOString();
+  const payload: AppEventMap["core.cross_sell.status_changed.v1"] = {
+    opportunityId,
+    leadId: opportunity.leadId,
+    from: opportunity.status,
+    to: decision,
+    changedAt,
+    correlationId,
+  };
+
+  await eventBus.publish({
+    id: crypto.randomUUID(),
+    type: "core.cross_sell.status_changed.v1",
+    occurredAt: changedAt,
+    actorService: "core",
+    aggregateId: opportunity.leadId,
+    correlationId,
+    payload,
+  });
+
+  await audit(db, {
+    actorService: "core",
+    eventType: "core.cross_sell.status_changed.v1",
+    entityType: "CrossSellOpportunity",
+    entityId: opportunityId,
+    leadId: opportunity.leadId,
+    payload,
     correlationId,
     causationId: event.id,
   });

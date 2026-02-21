@@ -1,6 +1,15 @@
 import type { AppEventMap, EventBus } from "@uslugpol/shared/event-bus";
 import crypto from "node:crypto";
 import { PrismaClient } from "../../generated/prisma/client";
+import type { CrossSellTargetService as EventModuleTargetService } from "../../enums";
+
+const PROPOSAL_TARGET_SERVICE_MAP = {
+  car_service: "CAR",
+  cleaning_service: "CLEANING",
+} as const satisfies Record<
+  AppEventMap["core.crosssell.proposed.v1"]["targetService"],
+  EventModuleTargetService
+>;
 
 export const registerEventServiceHandlers = (
   eventBus: EventBus<AppEventMap>,
@@ -48,8 +57,7 @@ export const registerEventServiceHandlers = (
 
     if (payload.leadCategory !== "EVENT") return;
 
-    const targetService =
-      payload.targetService === "car_service" ? "CAR" : "CLEANING";
+    const targetService = PROPOSAL_TARGET_SERVICE_MAP[payload.targetService];
 
     await db.crossSellProposalInbox.upsert({
       where: { opportunityId: payload.opportunityId },
