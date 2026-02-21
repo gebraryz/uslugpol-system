@@ -1,8 +1,18 @@
-export type LeadType = "EVENT" | "CAR" | "CLEANING";
-export type LeadStatus = "NEW" | "QUALIFIED" | "CONVERTED";
-export type LeadChannel = "PHONE" | "EMAIL" | "FORM";
-export type CrossSellSource = "RULE_ENGINE" | "SERVICE_REPORT";
-export type CrossSellOpportunityStatus = "PENDING" | "ACCEPTED" | "DECLINED";
+import type {
+  CrossSellOpportunityStatus,
+  CrossSellSource,
+  LeadChannel,
+  LeadStatus,
+  LeadType,
+} from "../../../../core/generated/prisma/client";
+
+export type {
+  CrossSellOpportunityStatus,
+  CrossSellSource,
+  LeadChannel,
+  LeadStatus,
+  LeadType,
+};
 
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
