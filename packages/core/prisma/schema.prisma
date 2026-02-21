@@ -7,3 +7,139 @@ datasource db {
   provider = "postgresql"
   schemas  = ["core"]
 }
+
+enum LeadType {
+  EVENT
+  CAR
+  CLEANING
+
+  @@map("lead_type")
+  @@schema("core")
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONVERTED
+
+  @@map("lead_status")
+  @@schema("core")
+}
+
+enum LeadChannel {
+  PHONE
+  EMAIL
+  FORM
+
+  @@map("lead_channel")
+  @@schema("core")
+}
+
+model Lead {
+  id String @id @default(uuid())
+
+  category LeadType
+  status   LeadStatus
+  channel  LeadChannel
+
+  description String
+
+  lat Float
+  lng Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  extensions    LeadExtension[]
+  opportunities CrossSellOpportunity[]
+
+  @@index([category, status])
+  @@map("leads")
+  @@schema("core")
+}
+
+model LeadExtension {
+  id     String @id @default(uuid())
+  leadId String @map("lead_id")
+
+  namespace String
+  data      Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lead Lead @relation(fields: [leadId], references: [id])
+
+  @@unique([leadId, namespace])
+  @@index([namespace])
+  @@map("lead_extensions")
+  @@schema("core")
+}
+
+enum CrossSellOpportunityStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+
+  @@map("cross_sell_opportunity_status")
+  @@schema("core")
+}
+
+enum CrossSellSource {
+  RULE_ENGINE
+  SERVICE_REPORT
+
+  @@map("cross_sell_source")
+  @@schema("core")
+}
+
+model CrossSellOpportunity {
+  id     String @id @default(uuid())
+  leadId String @map("lead_id")
+
+  targetService LeadType
+
+  source CrossSellSource
+  status CrossSellOpportunityStatus @default(PENDING)
+
+  reason String
+
+  ruleKey String? @map("rule_key")
+  context Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lead Lead @relation(fields: [leadId], references: [id])
+
+  @@index([leadId, status])
+  @@index([targetService, status])
+  @@map("cross_sell_opportunities")
+  @@schema("core")
+}
+
+model AuditLog {
+  id     String  @id @default(uuid())
+  leadId String? @map("lead_id")
+
+  actorService String @map("actor_service")
+
+  eventType  String @map("event_type")
+  entityType String @map("entity_type")
+  entityId   String @map("entity_id")
+
+  payload Json
+
+  correlationId String? @map("correlation_id")
+  causationId   String? @map("causation_id")
+
+  occurredAt DateTime @default(now()) @map("occurred_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([occurredAt])
+  @@index([entityType, entityId, occurredAt])
+  @@index([leadId, occurredAt])
+  @@index([correlationId])
+  @@map("audit_log")
+  @@schema("core")
+}

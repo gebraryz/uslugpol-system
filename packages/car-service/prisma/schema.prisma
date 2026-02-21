@@ -7,3 +7,71 @@ datasource db {
   provider = "postgresql"
   schemas  = ["car_service"]
 }
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONVERTED
+
+  @@map("lead_status")
+  @@schema("car_service")
+}
+
+enum LeadChannel {
+  PHONE
+  EMAIL
+  FORM
+
+  @@map("lead_channel")
+  @@schema("car_service")
+}
+
+enum CrossSellDecisionStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+
+  @@schema("car_service")
+}
+
+model CarLeadInbox {
+  id     String @id @default(uuid())
+  leadId String @unique @map("lead_id")
+
+  channel LeadChannel
+  status  LeadStatus
+
+  description String
+
+  lat Float
+  lng Float
+
+  receivedAt DateTime @default(now()) @map("received_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([status, receivedAt])
+  @@map("car_lead_inbox")
+  @@schema("car_service")
+}
+
+model CrossSellInbox {
+  id            String  @id @default(uuid())
+  leadId        String  @map("lead_id")
+  opportunityId String? @unique @map("opportunity_id")
+
+  reason String
+
+  ruleKey String? @map("rule_key")
+  context Json?   @map("context")
+
+  status       CrossSellDecisionStatus @default(PENDING)
+  decisionNote String?                 @map("decision_note")
+
+  receivedAt DateTime  @default(now()) @map("received_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+
+  @@index([leadId, receivedAt])
+  @@index([status, receivedAt])
+  @@map("cross_sell_inbox")
+  @@schema("car_service")
+}

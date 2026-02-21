@@ -1,0 +1,9 @@
+{
+  "name": "@uslugpol/shared",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./event-bus": "./event-bus/index.ts"
+  }
+}

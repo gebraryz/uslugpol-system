@@ -7,3 +7,112 @@ datasource db {
   provider = "postgresql"
   schemas  = ["event_service"]
 }
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONVERTED
+
+  @@map("lead_status")
+  @@schema("event_service")
+}
+
+enum LeadChannel {
+  PHONE
+  EMAIL
+  FORM
+
+  @@map("lead_channel")
+  @@schema("event_service")
+}
+
+enum CrossSellTargetService {
+  CAR
+  CLEANING
+
+  @@map("cross_sell_target_service")
+  @@schema("event_service")
+}
+
+model EventLeadInbox {
+  id     String @id @default(uuid())
+  leadId String @unique @map("lead_id")
+
+  channel LeadChannel
+  status  LeadStatus
+
+  description String
+
+  lat Float
+  lng Float
+
+  receivedAt DateTime @default(now()) @map("received_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  details   EventDetails?
+  proposals CrossSellProposalInbox[]
+
+  @@index([status, receivedAt])
+  @@map("event_lead_inbox")
+  @@schema("event_service")
+}
+
+model EventDetails {
+  id     String @id @default(uuid())
+  leadId String @unique @map("lead_id")
+
+  eventDate  DateTime? @map("event_date")
+  guestCount Int?      @map("guest_count")
+  budget     Int?
+  isOutdoor  Boolean?  @map("is_outdoor")
+
+  inbox EventLeadInbox? @relation(fields: [leadId], references: [leadId])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("event_details")
+  @@schema("event_service")
+}
+
+model CrossSellProposalInbox {
+  id            String  @id @default(uuid())
+  leadId        String  @map("lead_id")
+  opportunityId String? @unique @map("opportunity_id")
+
+  targetService CrossSellTargetService @map("target_service")
+
+  reason  String
+  ruleKey String? @map("rule_key")
+
+  receivedAt DateTime  @default(now()) @map("received_at")
+  seenAt     DateTime? @map("seen_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+
+  lead EventLeadInbox @relation(fields: [leadId], references: [leadId])
+
+  @@index([leadId, receivedAt])
+  @@index([targetService, receivedAt])
+  @@map("cross_sell_proposal_inbox")
+  @@schema("event_service")
+}
+
+model OpportunityReport {
+  id     String @id @default(uuid())
+  leadId String @map("lead_id")
+
+  targetService CrossSellTargetService? @map("target_service")
+
+  description String
+
+  context Json? @map("context")
+
+  sentToCore Boolean @default(false) @map("sent_to_core")
+
+  reportedAt DateTime @default(now()) @map("reported_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([leadId, reportedAt])
+  @@map("opportunity_reports")
+  @@schema("event_service")
+}

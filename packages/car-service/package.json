@@ -3,14 +3,16 @@
   "type": "module",
   "main": "index.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./enums": "./enums.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
     "db:generate": "prisma generate --config prisma.config.ts",
     "db:migrate": "prisma migrate dev --config prisma.config.ts",
-    "db:migrate:deploy": "prisma migrate deploy --config prisma.config.ts"
+    "db:migrate:deploy": "prisma migrate deploy --config prisma.config.ts",
+    "db:studio": "prisma studio --config prisma.config.ts"
   },
   "devDependencies": {
     "@uslugpol/config": "workspace:*",
@@ -19,6 +21,7 @@
     "prisma": "^7.4.0"
   },
   "dependencies": {
+    "@uslugpol/shared": "workspace:*",
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
     "dotenv": "^17.3.1",
