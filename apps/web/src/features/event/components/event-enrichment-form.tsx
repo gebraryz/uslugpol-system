@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { toast } from "sonner";
 import { upsertEventEnrichmentAction } from "../actions/upsert-event-enrichment";
+import { getTodayDateInput, toDateInput } from "../lib/utils";
 import { upsertEventEnrichmentSchema } from "../schema/upsert-event-enrichment";
 
 interface EventEnrichmentFormProps {
@@ -51,8 +52,8 @@ const fromOutdoorSelectValue = (value: string): boolean | null => {
   return null;
 };
 
-const toDateInput = (date: Date | null) =>
-  date ? date.toISOString().slice(0, 10) : undefined;
+const toNullableDateInput = (date: Date | null) =>
+  date ? toDateInput(date) : undefined;
 
 const toNullableInt = (value: string): number | null =>
   value.trim() === "" ? null : Number(value);
@@ -86,7 +87,7 @@ export const EventEnrichmentForm = ({
       formProps: {
         defaultValues: {
           leadId,
-          eventDate: toDateInput(initialData?.eventDate ?? null),
+          eventDate: toNullableDateInput(initialData?.eventDate ?? null),
           guestCount: initialData?.guestCount ?? undefined,
           budget: initialData?.budget ?? undefined,
           isOutdoor: initialData?.isOutdoor ?? null,
@@ -96,6 +97,7 @@ export const EventEnrichmentForm = ({
   );
 
   const isOutdoor = form.watch("isOutdoor");
+  const minEventDate = getTodayDateInput();
 
   return (
     <form className="space-y-4" onSubmit={handleSubmitWithAction}>
@@ -107,6 +109,7 @@ export const EventEnrichmentForm = ({
           <Input
             id="eventDate"
             type="date"
+            min={minEventDate}
             {...form.register("eventDate", {
               setValueAs: (value) =>
                 typeof value === "string" && value.trim() === "" ? null : value,
