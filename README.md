@@ -2,7 +2,7 @@
 
 MVP system do zarządzania leadami i sprzedażą krzyżową dla holdingu usługowego.
 
-## Co robi ten projekt
+## O projekcie
 
 UsługPOL składa się z kilku spółek (obsługa eventów, wynajem aut, usługi ogólne), które do tej pory działały całkowicie niezależnie. Użytkownik systemu pracuje w ramach jednej marki, ale informacje o leadach nie przepływały między spółkami - każda prowadziła własne leady i nie miała wglądu w działania pozostałych spółek.
 
