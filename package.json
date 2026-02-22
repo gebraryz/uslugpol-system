@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "start": "pnpm --filter web start",
     "lint": "turbo run lint",
     "test": "vitest run test",
     "db:migrate": "turbo run db:migrate --concurrency=1 --filter=@uslugpol/core --filter=@uslugpol/event-service --filter=@uslugpol/car-service",

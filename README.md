@@ -113,6 +113,24 @@ pnpm dev
 
 Aplikacja będzie dostępna pod [http://localhost:3000](http://localhost:3000)
 
+### Uruchamianie zbudowanej aplikacji
+
+Po wykonaniu kroków 1-4 (instalacja, Docker, `.env`, migracje) można zbudować i uruchomić aplikację w trybie produkcyjnym:
+
+**1. Zbuduj projekt**
+
+```bash
+pnpm build
+```
+
+**2. Uruchom zbudowaną aplikację**
+
+```bash
+pnpm start
+```
+
+Skrypt `start` uruchamia `apps/web` (`next start`). Domyślnie aplikacja będzie dostępna pod [http://localhost:3000](http://localhost:3000).
+
 ---
 
 ## Dodatkowe komendy
