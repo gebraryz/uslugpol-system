@@ -64,6 +64,7 @@ docker compose up -d
 ```
 
 Docker automatycznie tworzy bazę danych `uslugpol` z trzema schemami (`core`, `event_service`, `car_service`).
+Plik `docker/postgres/init/001_schemas.sql` służy wyłącznie do bootstrapu tych schematów przed uruchomieniem migracji Prisma.
 
 **3. Skonfiguruj zmienne środowiskowe**
 
