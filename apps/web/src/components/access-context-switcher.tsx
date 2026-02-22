@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useSidebar } from "./ui/sidebar";
 
 interface AccessContextSwitcherProps {
   initialContext: AccessContext;
@@ -26,11 +27,16 @@ export const AccessContextSwitcher = ({
   initialContext,
 }: AccessContextSwitcherProps) => {
   const router = useRouter();
+  const { isMobile, setOpenMobile } = useSidebar();
   const [value, setValue] = useState<AccessContext>(initialContext);
 
   const { execute, isExecuting } = useAction(setAccessContextAction, {
     onSuccess: ({ data }) => {
       if (!data) return;
+
+      if (isMobile) {
+        setOpenMobile(false);
+      }
 
       router.replace(data.redirectTo);
       router.refresh();

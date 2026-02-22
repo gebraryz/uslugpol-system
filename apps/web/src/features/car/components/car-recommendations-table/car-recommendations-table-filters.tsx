@@ -45,7 +45,7 @@ export const CarRecommendationsTableFilters = () => (
   <div className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
     <QuerySearchInput
       queryKey="id"
-      label="ID leada/opcji"
+      label="ID leada"
       placeholder="np. 81763ada..."
       resetKeys={["ruleKey", "status", "reviewState"]}
     />
